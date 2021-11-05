@@ -1,0 +1,36 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+#main {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+.page-header {
+  backgroun: "fixed";
+  background-image: url("bg-page-header.svg");
+  background-position: -50% 0;
+}
+
+.page-header__title {
+  font-family: $serif-font-family;
+  @include media-breakpoint-down(sm) {
+    font-size: 2em;
+  }
+}
+
+.page-header__id {
+  font-size: 1em;
+}

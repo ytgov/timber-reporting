@@ -1,0 +1,80 @@
+{
+  "name": "sfa-public",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/oracledb": "^5.2.1",
+    "@types/react": "^16.9.0",
+    "@types/react-datepicker": "^2.11.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/react-select": "^3.0.13",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.4.1npm ",
+    "react": "^16.13.1",
+    "react-datepicker": "^2.16.0",
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "react-select": "^3.1.0",
+    "react-table": "^7.0.4",
+    "react-toastify": "^5.5.0",
+    "reactstrap": "^8.4.1",
+    "typescript": "~3.7.2"
+  },
+  "scripts": {
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --source-map true --watch --recursive",
+    "start": "concurrently \"BROWSER=none PORT=3007 react-scripts start\" \"npm run watch-css\"",
+    "start-win": "concurrently \"SET PORT=3007 && react-scripts start\" \"npm run watch-css\"",
+    "start-simple": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "check-tsc": "tsc --skipLibCheck --noEmit true",
+    "watch-tsc": "tsc --skipLibCheck --watch --outDir watch_output",
+    "prettier-check": "prettier -c \"src/{components,hooks,__{tests,mocks}__}/**/*.{ts,tsx,js}\"",
+    "checks": "npm run check-tsc && npm run prettier-check && npm run lint"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/reactstrap": "^8.4.2",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "git-branch-is": "^3.1.0",
+    "concurrently": "^5.2.0",
+    "node-sass-chokidar": "^1.4.0",
+    "husky": "^4.2.5",
+    "prettier": "^2.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "if git-branch-is -qr \"master|develop\"; then npm run checks; fi;"
+    }
+  }
+}

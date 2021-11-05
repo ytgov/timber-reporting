@@ -1,0 +1,70 @@
+//.username {
+//  color: white;
+//}
+
+.skip-navigation {
+  color: $primary;
+  position: absolute;
+  top: -120px;
+  text-align: center;
+  &:focus {
+    position: static;
+  }
+}
+
+.dropdown-menu a {
+  text-decoration: none;
+}
+
+.initialsContainerDropdown {
+  padding: 0;
+}
+
+.initialsContainer {
+  background-color: $primary;
+  border-radius: 17px;
+  padding: 5px;
+  text-align: center;
+  display: inline-block;
+  height: 34px;
+  min-width: 34px;
+}
+
+.userInitials {
+  color: white;
+  font-weight: bold;
+}
+
+.initialsContainer:hover {
+  background-color: lighten($primary, 5%);
+}
+
+.projectSearch {
+  width: 110px;
+}
+
+/*******************************************************************************/
+/*                                    HEADER                                   */
+/*******************************************************************************/
+
+.terminal-mode-container {
+  display: flex;
+  width: 100%;
+  z-index: 10;
+  border-top: 2px solid #f5d700;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.terminal-mode-container .terminal-mode {
+  padding: 0 10px;
+  background-color: #f5d700;
+  color: black;
+  font-weight: 600;
+  text-transform: uppercase;
+  top: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  margin: -3px auto;
+  font-size: 10px;
+}

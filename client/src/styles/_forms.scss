@@ -1,0 +1,37 @@
+label {
+  font-weight: 700;
+}
+
+textarea {
+  min-height: 300px;
+}
+
+.formatted-textbox-editor {
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  min-height: 120px;
+  padding: 0 1rem;
+  .formatted-textbox-wrapper--disabled & {
+    background-color: $input-disabled-bg;
+  }
+}
+
+.rdw-editor-toolbar {
+  border-color: $border-color;
+  border-radius: $border-radius;
+  .formatted-textbox-wrapper--disabled & {
+    display: none;
+  }
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  display: block;
+}
+
+.form-check-label,
+.custom-checkbox .custom-control-label,
+.custom-radio .custom-control-label {
+  font-weight: 400;
+  color: $gray-900;
+}

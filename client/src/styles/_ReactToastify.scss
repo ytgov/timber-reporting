@@ -1,0 +1,15 @@
+.Toastify__toast {
+  @extend .alert;
+}
+
+.Toastify__toast--success {
+  @extend .alert-success;
+}
+
+.Toastify__toast--error {
+  @extend .alert-danger;
+}
+
+.Toastify__close-button {
+  @extend .close;
+}
