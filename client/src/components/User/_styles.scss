@@ -1,0 +1,36 @@
+.individual-details-container {
+  input[type="checkbox"] {
+    margin-left: 10px;
+    margin-top: 15px;
+  }
+}
+
+.text-required {
+  color: #d49f00;
+}
+
+.overflow-header-table {
+  .rt-th {
+    overflow: initial;
+  }
+}
+.individuals-table {
+  table {
+    border-collapse: collapse;
+    border: 1px solid grey;
+  }
+
+  th,
+  td {
+    border: 1px solid grey;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  tr {
+    &:hover,
+    &:focus {
+      background: $gray-200;
+    }
+  }
+}

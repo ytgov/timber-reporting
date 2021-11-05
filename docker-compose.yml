@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+  nginx:
+    image: nginx:1.18.0-alpine
+    volumes:
+      - ${PWD}/_docker/nginx/nginx-dev.template:/etc/nginx/conf.d/default.conf
+    extra_hosts:
+      - "devhost:${DEV_HOST_IP}"
+    ports:
+      - "88:88"

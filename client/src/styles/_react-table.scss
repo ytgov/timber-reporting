@@ -1,0 +1,101 @@
+.ReactTable .rt-thead.-filters input,
+.ReactTable .rt-thead.-filters select {
+  @extend .form-control;
+}
+
+.ReactTable .rt-thead.-header {
+  box-shadow: none;
+  border-bottom: 1px solid $border-color;
+}
+
+.ReactTable .rt-thead.-header .rt-th {
+  font-weight: 700;
+  padding: 8px 1.5rem 8px 5px;
+  text-align: left;
+  position: relative;
+  &.-cursor-pointer::before,
+  &.-cursor-pointer::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+  }
+  &.-cursor-pointer::before {
+    border-bottom: 5px solid $border-color;
+    margin-top: -6px;
+  }
+  &.-cursor-pointer::after {
+    border-top: 5px solid $border-color;
+    margin-top: 1px;
+  }
+}
+
+.ReactTable .rt-thead .rt-th.-cursor-pointer.-sort-asc,
+.ReactTable .rt-thead .rt-td.-cursor-pointer.-sort-asc {
+  box-shadow: none;
+  &::before {
+    border-bottom: 5px solid $primary;
+  }
+}
+
+.ReactTable .rt-thead .rt-th.-cursor-pointer.-sort-desc,
+.ReactTable .rt-thead .rt-td.-cursor-pointer.-sort-desc {
+  box-shadow: none;
+  &::after {
+    border-top: 5px solid $primary;
+  }
+}
+
+.ReactTable .-pagination {
+  box-shadow: none;
+  border-top: 1px solid $border-color;
+}
+
+.ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
+  cursor: pointer;
+}
+
+.ReactTable .prevent-truncation {
+  white-space: normal;
+  overflow: visible;
+}
+
+.ReactTable .rt-table {
+  min-height: 700px;
+}
+
+.ReactTable .rt-tr-group {
+  flex: 0;
+}
+
+// Target IE 11
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .ReactTable .rt-tr-group {
+    flex: auto;
+  }
+}
+
+// To fix a display issue with the checkboxes in the react table filters
+.ReactTable .rt-thead .custom-control-label::before,
+.ReactTable .rt-thead .custom-control-label::after {
+  top: 0.075rem;
+}
+
+.ReactTable .rt-thead .btn-outline-secondary {
+  border-color: $border-color;
+  color: $body-color;
+  &:active,
+  &:focus,
+  &:hover,
+  .show & {
+    color: $white;
+  }
+}
+
+.ReactTable .rt-noData {
+  text-align: center;
+}
