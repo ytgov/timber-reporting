@@ -18,7 +18,8 @@ COPY package.json /usr/src/app/package.json
 RUN npm install
 
 RUN npm install -g nodemon
-COPY . .
+COPY .env /usr/src/app/.env
+COPY dist /usr/src/app/dist
 EXPOSE 3000
 
 CMD [ "node", "dist/index.js" ]
