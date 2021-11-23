@@ -5,7 +5,7 @@ services:
     volumes:
       - ${PWD}/_docker/nginx/nginx-test.template:/etc/nginx/conf.d/default.conf
     ports:
-      - "88:88"
+      - "80:80"
     depends_on:
       - timber_client
       - timber_api
