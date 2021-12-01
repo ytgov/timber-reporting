@@ -6,6 +6,7 @@ import { router } from './router';
 
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import { dbCheck } from './db/ClientController';
 
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -123,6 +124,15 @@ app.get('/api/auth/post-logout', async (req: any, res) => {
   res.clearCookie('auth');
   res.clearCookie('appSession');
   res.redirect(process.env.HOST + '/');
+});
+
+app.get('/api/health-check', async (req: any, res) => {
+  const db = await dbCheck();
+  if (!db) {
+    res.send('KO - DB');
+  } else {
+    res.send('OK');
+  }
 });
 
 // view engine setup

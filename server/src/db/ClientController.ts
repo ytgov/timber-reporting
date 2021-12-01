@@ -28,6 +28,34 @@ export interface IPermitReportMonthData {
   data: IData[];
 }
 
+export const dbCheck = async (): Promise<boolean> => {
+  let connection: any;
+  try {
+    connection = await oracledb.getConnection({
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      connectString: process.env.DB_CONNECT,
+    });
+    let sql = 'SELECT sysdate FROM dual';
+    let options = {
+      outFormat: oracledb.OUT_FORMAT_OBJECT, // query result format
+    };
+    const result = await connection.execute(sql, [], options);
+
+    return result.rows.length > 0;
+  } catch (e) {
+    return false;
+  } finally {
+    if (connection) {
+      try {
+        await connection.close(); // always release the connection back to the pool
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+};
+
 export const selectRequiredReportsORCL = async (clientNum: number) => {
   let connection: any;
   try {
