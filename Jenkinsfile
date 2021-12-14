@@ -20,6 +20,9 @@ pipeline {
             steps {
                 sh 'npm install server/ pg'
                 sh 'npm install server/ --save-dev @types/pg'
+                sh 'npm install server/ --save-dev @types/express'
+                sh 'npm install server/ --save-dev @types/cors'
+                sh 'npm install server/ --save-dev @types/jsonwebtoken'
                 sh 'npm --prefix server/ run build'
 
                 sh 'npm install client/'
