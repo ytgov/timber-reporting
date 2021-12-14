@@ -16,6 +16,17 @@ pipeline {
 
 
     stages {
+        stage('Dependencies') {
+            steps {
+                sh 'npm install server/ pg'
+                sh 'npm install server/ --save-dev @types/pg'
+                sh 'npm --prefix server/ run build'
+
+                sh 'npm install client/'
+                sh 'npm --prefix client/ run build-css'
+                sh 'npm --prefix client/ run build'
+            }
+        }
         stage('Build and Push') {
             steps {
                 script {
@@ -51,8 +62,8 @@ pipeline {
         stage('Refresh deployments') {
 
             steps {
-                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.5.1/wcp/login -k -d \'{"guest_cluster_name":"ict-dmz-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-client --token=$tkc_session'
-                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.5.1/wcp/login -k -d \'{"guest_cluster_name":"ict-dmz-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-api --token=$tkc_session'
+                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.5.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-client --token=$tkc_session'
+                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.5.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-api --token=$tkc_session'
             }
         }
 
