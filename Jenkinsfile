@@ -28,7 +28,7 @@ pipeline {
                 sh 'npm --prefix server/ run build'
 
                 sh 'npm i --unsafe-perm client/'
-                sh 'npm node-sass-chokidar -v'
+                sh 'npm i bootstrap'
                 sh 'npm --prefix client/ run build-css'
                 sh 'npm --prefix client/ run build'
             }
