@@ -30,7 +30,21 @@ spec:
           image: 10.230.5.2/eserv-tst-ns/timber-api:latest
           name: timber-api
           resources: {}
+          #          volumeMounts:
+          #            - mountPath: "/usr/src/app/.env"
+          #              subPath: .env
+          #              name: env-configmap-volume
+          envFrom:
+            - secretRef:
+                name: env-secrets
+
+      restartPolicy: Always
+
+      #      volumes:
+      #        - name: env-configmap-volume
+      #          configMap:
+      #            name: env-configmap
+
       imagePullSecrets:
         - name: eserv-tst-ns-default-image-pull-secret
-      restartPolicy: Always
 status: {}

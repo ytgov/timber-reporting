@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     def client = docker.build("${HARBOR_URL}/${HARBOR_PROJECT}/${CLIENT_NAME}:${VERSION}", "-f ${env.WORKSPACE}/client/Dockerfile ./client")
-                    def api = docker.build("${HARBOR_URL}/${HARBOR_PROJECT}/${API_NAME}:${VERSION}", "-f ${env.WORKSPACE}/server/Dockerfile ./server")
+                    def api = docker.build("${HARBOR_URL}/${HARBOR_PROJECT}/${API_NAME}:${VERSION}", "-f ${env.WORKSPACE}/server/Dockerfile-noenv ./server")
                     docker.withRegistry("https://${HARBOR_URL}", "srv-jenkins-domain") {
                         client.push()
                         client.push("latest")
