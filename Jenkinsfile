@@ -23,6 +23,7 @@ pipeline {
                 sh 'npm install server/ --save-dev @types/express'
                 sh 'npm install server/ --save-dev @types/cors'
                 sh 'npm install server/ --save-dev @types/jsonwebtoken'
+                sh 'npm install server/ --save-dev @types/oracledb'
                 sh 'npm --prefix server/ run build'
 
                 sh 'npm install client/'
