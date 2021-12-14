@@ -18,28 +18,29 @@ pipeline {
     stages {
         stage('Dependencies') {
             steps {
-                sh 'npm i server/'
-                sh 'npm install server/ pg'
-                sh 'npm install server/ --save-dev @types/pg'
-                sh 'npm install server/ --save-dev @types/express'
-                sh 'npm install server/ --save-dev @types/cors'
-                sh 'npm install server/ --save-dev @types/jsonwebtoken'
-                sh 'npm install server/ --save-dev @types/oracledb'
-                sh 'npm --prefix server/ run build'
-
+                dir('server') {
+                    sh 'npm i'
+                    sh 'npm install pg'
+                    sh 'npm install --save-dev @types/pg'
+                    sh 'npm install --save-dev @types/express'
+                    sh 'npm install --save-dev @types/cors'
+                    sh 'npm install --save-dev @types/jsonwebtoken'
+                    sh 'npm install --save-dev @types/oracledb'
+                    sh 'npm run build'
+                }
                 dir('client') {
-                sh 'npm i'
-                //sh 'npm i bootstrap'
-                sh 'npm run build-css'
-                sh 'npm run build'
+                    sh 'npm i'
+                  //sh 'npm i bootstrap'
+                    sh 'npm run build-css'
+                    sh 'npm run build'
                 }
             }
         }
         stage('Build and Push') {
             steps {
                 script {
-                    def client = docker.build("${HARBOR_URL}/${HARBOR_PROJECT}/${CLIENT_NAME}:${VERSION}", "-f client/Dockerfile .")
-                    def api = docker.build("${HARBOR_URL}/${HARBOR_PROJECT}/${API_NAME}:${VERSION}", "-f server/Dockerfile .")
+                    def client = docker.build("${HARBOR_URL}/${HARBOR_PROJECT}/${CLIENT_NAME}:${VERSION}", "-f ${env.WORKSPACE}/client/Dockerfile ./client")
+                    def api = docker.build("${HARBOR_URL}/${HARBOR_PROJECT}/${API_NAME}:${VERSION}", "-f ${env.WORKSPACE}/server/Dockerfile ./server")
                     docker.withRegistry("https://${HARBOR_URL}", "srv-jenkins-domain") {
                         client.push()
                         client.push("latest")
