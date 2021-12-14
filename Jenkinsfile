@@ -27,7 +27,7 @@ pipeline {
                 sh 'npm --prefix server/ run build'
 
                 sh 'npm install client/'
-                sh 'npm install chokidar --save'
+                sh 'npm install client/ node-sass-chokidar'
                 sh 'npm --prefix client/ run build-css'
                 sh 'npm --prefix client/ run build'
             }
