@@ -27,10 +27,12 @@ pipeline {
                 sh 'npm install server/ --save-dev @types/oracledb'
                 sh 'npm --prefix server/ run build'
 
-                sh 'npm i --unsafe-perm client/'
-                sh 'npm i bootstrap'
-                sh 'npm --prefix client/ run build-css'
-                sh 'npm --prefix client/ run build'
+                dir('client') {
+                sh 'npm i'
+                //sh 'npm i bootstrap'
+                sh 'npm run build-css'
+                sh 'npm run build'
+                }
             }
         }
         stage('Build and Push') {
