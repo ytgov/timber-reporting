@@ -26,7 +26,7 @@ pipeline {
                 sh 'npm install server/ --save-dev @types/oracledb'
                 sh 'npm --prefix server/ run build'
 
-                sh 'npm install client/'
+                sh 'npm install --unsafe-perm client/'
                 sh 'npm --prefix client/ run build-css'
                 sh 'npm --prefix client/ run build'
             }
