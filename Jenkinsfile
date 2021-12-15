@@ -22,10 +22,6 @@ pipeline {
                     sh 'npm i'
                     sh 'npm install pg'
                     sh 'npm install --save-dev @types/pg'
-                    sh 'npm install --save-dev @types/express'
-                    sh 'npm install --save-dev @types/cors'
-                    sh 'npm install --save-dev @types/jsonwebtoken'
-                    sh 'npm install --save-dev @types/oracledb'
                     sh 'npm run build'
                 }
                 dir('client') {
