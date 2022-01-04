@@ -302,7 +302,7 @@ export const MainPage: React.FC = () => {
                                                   value = 0;
                                                 } else {
                                                   value = parseFloat(valueChar);
-                                                  if (value === NaN) {
+                                                  if (!value || isNaN(value) ) {
                                                     value = 0;
                                                   }
                                                 }
