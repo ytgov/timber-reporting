@@ -65,6 +65,7 @@ export const LandingPage: React.FC = () => {
               forestry@yukon.ca or phone 867-456-3999, toll free in Yukon 1-800-661-0408, extension 3999.
               <br />
               <br />
+            </p>
             <p>
               You can also {'  '}
               <a
@@ -73,7 +74,6 @@ export const LandingPage: React.FC = () => {
               >
               visit
               </a> a Compliance Monitoring and Inspections District office or the Forest Management Branch at 91807 Alaska Highway, Whitehorse.
-            </p>
             </p>
            </CardBody>
         </Card>
