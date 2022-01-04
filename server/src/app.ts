@@ -110,15 +110,32 @@ app.use((req, res, next) => {
 });
 
 app.use(function (req, res, next) {
-  if (req.oidc.isAuthenticated()) {
-    res.locals.user = req.oidc.user;
-  } else {
+  if (req.oidc.isAuthenticated() ) {
+    console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
+    if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG==='TRUE') {
+      console.log('setting user ',req.oidc.user);
+      res.locals.user = req.oidc.user;
+    } else {
+      console.log('logging out...');
+     // res.clearCookie('appSession');
+     //res.clearCookie('auth');
+     // res.locals.user = null;
+     // req.url = '/api/auth/logout';
+      //return app._router.handle(req, res, next);
+
+      return res.redirect('/api/auth/logout');
+      console.log('DONE logging out...');
+    }
+   } else {
+    console.log('NOT authenticated, res.locals.user set null...');
     res.locals.user = null;
   }
+  console.log('calling next()...');
   next();
 });
 
 app.get('/api/auth/post-logout', async (req: any, res) => {
+  console.log('post log out...');
   res.locals.user = null;
   res.locals.clientNum = null;
   res.clearCookie('auth');

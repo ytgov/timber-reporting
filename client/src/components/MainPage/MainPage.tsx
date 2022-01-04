@@ -176,23 +176,6 @@ export const MainPage: React.FC = () => {
                 return (
                   <Row key={`rr_${i}`} className={'mt-3'}>
                     <Col>
-                      {submittedPermit === e && (
-                        <Alert color={'success'} toggle={() => setSubmittedPermit('')}>
-                          Thank you for submitting your harvest information. You can change it up until the time it is
-                          accepted by Forestry Branch staff.
-                        </Alert>
-                      )}
-                      {attemptSubmit === e && errorMessage && submittedPermit !== e && (
-                        <Alert
-                          color={'danger'}
-                          toggle={() => {
-                            setAttemptSubmit('');
-                            setErrorMessage('');
-                          }}
-                        >
-                          {errorMessage}
-                        </Alert>
-                      )}
                       <Table style={{ borderCollapse: 'collapse' }} bordered={true} hover={true}>
                         <thead>
                           <tr>
@@ -307,12 +290,23 @@ export const MainPage: React.FC = () => {
                                           <InputGroup>
                                             <Input
                                               style={{ textAlign: 'right' }}
-                                              value={g.quantity || ''}
+                                              value={g.quantity || '0' }
                                               type={'text'}
                                               readOnly={res.processed}
-                                              invalid={permitDisplayError === e && !g.quantity}
+                                              invalid={permitDisplayError === e && !g.quantity }
                                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                const value = e.target.value;
+                                                var valueChar = e.target.value;
+                                                var value = 0;
+
+                                                if(!valueChar) {
+                                                  value = 0;
+                                                } else {
+                                                  value = parseFloat(valueChar);
+                                                  if (value === NaN) {
+                                                    value = 0;
+                                                  }
+                                                }
+                                                valueChar = value+'';
                                                 setRequiredReports((a: IRequiredReport[]) => {
                                                   const pIndex = a.findIndex((b) =>
                                                     b.data.find((c) => c.permitReportId === g.permitReportId)
@@ -328,7 +322,7 @@ export const MainPage: React.FC = () => {
                                                         ...a[pIndex].data.slice(0, dataIndex),
                                                         {
                                                           ...a[pIndex].data[dataIndex],
-                                                          quantity: value,
+                                                          quantity: valueChar,
                                                         },
                                                         ...a[pIndex].data.slice(dataIndex + 1),
                                                       ],
@@ -358,10 +352,27 @@ export const MainPage: React.FC = () => {
                         </tbody>
                         <tfoot>
                           <tr>
+
                             <td
                               colSpan={requiredReports.filter((f) => e === f.permitId)[0].data.length + 1}
                               align={mobile ? 'left' : 'right'}
                             >
+                              {submittedPermit === e && (
+                                  <Alert color={'success'} toggle={() => setSubmittedPermit('')}>
+                                    Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
+                                  </Alert>
+                              )}
+                              {attemptSubmit === e && errorMessage && submittedPermit !== e && (
+                                  <Alert
+                                      color={'danger'}
+                                      toggle={() => {
+                                        setAttemptSubmit('');
+                                        setErrorMessage('');
+                                      }}
+                                  >
+                                    {errorMessage}
+                                  </Alert>
+                              )}
                               {requiredReports.find((rr) => rr.permitId === e)?.processed && (
                                 <>
                                   <Button
@@ -406,7 +417,7 @@ export const MainPage: React.FC = () => {
                                     const data = requiredReports
                                       .filter((rr) => rr.permitId === e)
                                       .reduce((prev: IData[], curr: IRequiredReport) => [...prev, ...curr.data], []);
-                                    if (data.find((d) => !d.quantity)) {
+                                    if (data.find((d) => !d.quantity )) {
                                       setPermitDisplayError(e);
                                       setErrorMessage('Missing harvest amount. You must enter a value for every month');
                                       setAttemptSubmit(e);

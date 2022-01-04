@@ -6,7 +6,11 @@ export const checkToken = async () => {
       return response.statusText === 'OK';
     },
     (error) => {
-      const status = error.response.status;
+  //    console.log('GPR error is ', error);
+      let status = 0;
+      if (error.response !== undefined) {
+        status = error.response.status;
+      }
 
       if (status === 502 || status === 503) {
         window.setTimeout(() => checkToken(), 1000);

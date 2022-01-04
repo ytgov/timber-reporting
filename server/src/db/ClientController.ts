@@ -90,10 +90,11 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
         return {
           rate: f.RATE,
           productType: f.PRODUCT + ' ' + f.TIMBER_TYPE + ' ---> ' + f.REMAINING_VOLUME + ' m\u00B3 remaining',
-          quantity: f.VOLUME,
+          quantity: f.VOLUME || 0,
           permitReportId: f.TEN_PERMIT_SCHED_PROD_ID,
           permitProductId: f.TEN_PERMIT_PRODUCT_ID,
           permitScheduleId: f.TEN_PERMIT_SCHEDULE_ID,
+          remainingVolume: f.REMAINING_VOLUME,
         };
       });
 
