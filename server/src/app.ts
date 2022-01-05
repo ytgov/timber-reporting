@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
-import cors from 'cors';
+//import cors from 'cors';
+const cors = require('cors');
 import { validateClientORCL } from './api/apiHandler';
 import { router } from './router';
 
@@ -80,8 +81,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
-
+app.use(cors({
+ // origin: '*'
+  origin: ['http://localhost:88','https://yukon-staging.eu.auth0.com/','https://dev-0tc6bn14.eu.auth0.com/']
+}));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+})
 const { auth } = require('express-openid-connect');
 
 const config = {
@@ -102,35 +110,35 @@ const config = {
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
-app.use((req, res, next) => {
-  res.append('Access-Control-Allow-Origin', ['*']);
-  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.append('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+//app.use((req, res, next) => {
+//  res.append('Access-Control-Allow-Origin', ['*']);
+//  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//  res.append('Access-Control-Allow-Headers', 'Content-Type');
+//  next();
+//});
 
 app.use(function (req, res, next) {
   if (req.oidc.isAuthenticated() ) {
-    console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
-    if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG==='TRUE') {
+   // console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
+    //if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG==='TRUE' ) {
+    if ( process.env.AUTH_EMAIL_VERIFIED_FLAG==='TRUE' || 1===1) {
       console.log('setting user ',req.oidc.user);
       res.locals.user = req.oidc.user;
     } else {
-      console.log('logging out...');
-     // res.clearCookie('appSession');
-     //res.clearCookie('auth');
-     // res.locals.user = null;
+      console.log('logging out...', req.url);
+    //  res.clearCookie('appSession');
+   //  res.clearCookie('auth');
+    //  res.locals.user = null;
      // req.url = '/api/auth/logout';
-      //return app._router.handle(req, res, next);
-
+     //return app._router.handle(req, res, next);
+     // app.get('/api/auth/logout');
       return res.redirect('/api/auth/logout');
-      console.log('DONE logging out...');
     }
    } else {
     console.log('NOT authenticated, res.locals.user set null...');
     res.locals.user = null;
   }
-  console.log('calling next()...');
+  console.log('calling next() after authentication...');
   next();
 });
 

@@ -32,6 +32,7 @@ export interface IData {
   productType: string;
   permitProductId: string;
   permitScheduleId: string;
+  remainingVolume: number;
 }
 
 export interface IRequiredReport {
@@ -82,6 +83,25 @@ export const MainPage: React.FC = () => {
         }
         return 0;
       });
+  };
+
+  const overHarvest = (permitId: string) => {
+    const tot = (requiredReports
+          .filter((rr) => rr.permitId === permitId)
+          .reduce(
+              (prev: number, curr: IRequiredReport) =>
+                  prev +
+                  curr.data.reduce(
+                      (prev2: number, curr2: IData) => prev2 + (curr2.quantity*1),
+                      0
+                  ),
+              0
+          ));
+      const remain = requiredReports
+          .filter((f) => permitId === f.permitId)[0]
+          .data.map((f, i) => (
+              f.remainingVolume ));
+;     return tot > remain[0];
   };
 
   const refresh = () => {
@@ -357,7 +377,7 @@ export const MainPage: React.FC = () => {
                               colSpan={requiredReports.filter((f) => e === f.permitId)[0].data.length + 1}
                               align={mobile ? 'left' : 'right'}
                             >
-                              {submittedPermit === e && (
+                             {submittedPermit === e && (
                                   <Alert color={'success'} toggle={() => setSubmittedPermit('')}>
                                     Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
                                   </Alert>
@@ -422,22 +442,28 @@ export const MainPage: React.FC = () => {
                                       setErrorMessage('Missing harvest amount. You must enter a value for every month');
                                       setAttemptSubmit(e);
                                     } else {
-                                      const x = await submitTimberHarvest(data);
-                                      if (x === 1) {
-                                        setSubmittedPermit(e);
-                                        setRequiredReports((a: IRequiredReport[]) => {
-                                          return a.map((b) => {
-                                            if (b.permitId === e) {
-                                              return {
-                                                ...b,
-                                                processed: true,
-                                                editing: false,
-                                              };
-                                            } else {
-                                              return b;
-                                            }
+                                      if (!overHarvest(e)) {
+                                        const x = await submitTimberHarvest(data);
+                                        if (x === 1) {
+                                          setSubmittedPermit(e);
+                                          setRequiredReports((a: IRequiredReport[]) => {
+                                            return a.map((b) => {
+                                              if (b.permitId === e) {
+                                                return {
+                                                  ...b,
+                                                  processed: true,
+                                                  editing: false,
+                                                };
+                                              } else {
+                                                return b;
+                                              }
+                                            });
                                           });
-                                        });
+                                        }
+                                      } else {
+                                        setPermitDisplayError(e);
+                                        setErrorMessage('Overharvest - Please contact forestry if further volume is required.');
+                                        setAttemptSubmit(e);
                                       }
                                     }
                                   }}
