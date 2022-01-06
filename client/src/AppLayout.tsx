@@ -8,7 +8,6 @@ import { ToastContainer } from 'react-toastify';
 import { MainPage } from 'components/MainPage/MainPage';
 import { LandingPage } from 'components/LandingPage/LandingPage';
 import { PreviousReports } from 'components/MainPage/PreviousReports';
-import { FourHundredFour } from 'components/FourHundredFour/FourHundredFour';
 
 export const AppLayout = () => {
   const authContext = useContext(AuthContext);
@@ -32,9 +31,6 @@ export const AppLayout = () => {
               </Route>
               <Route path={'/previous-reports'}>
                 <PreviousReports />
-              </Route>
-              <Route path={'/'}>
-                <FourHundredFour />
               </Route>
             </Switch>
           </main>

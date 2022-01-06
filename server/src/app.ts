@@ -120,30 +120,30 @@ app.use(auth(config));
 app.use(function (req, res, next) {
   if (req.oidc.isAuthenticated() ) {
    // console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
-    //if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG==='TRUE' ) {
-    if ( process.env.AUTH_EMAIL_VERIFIED_FLAG==='TRUE' || 1===1) {
+  //todo remove 1===1 for prod or test
+  //  if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' || 1===1) {
+    if ( process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
       console.log('setting user ',req.oidc.user);
       res.locals.user = req.oidc.user;
     } else {
-      console.log('logging out...', req.url);
-    //  res.clearCookie('appSession');
-   //  res.clearCookie('auth');
-    //  res.locals.user = null;
-     // req.url = '/api/auth/logout';
-     //return app._router.handle(req, res, next);
-     // app.get('/api/auth/logout');
-      return res.redirect('/api/auth/logout');
+      // req.url = '/api/auth/logout';
+      // return app._router.handle(req, res, next);
+       res.locals.user = null;
+       res.locals.clientNum = null;
+       res.clearCookie('auth');
+       res.clearCookie('appSession');
+       return res.status(403).send('Auth Email Not Verified');
+       //return res.redirect(process.env.HOST + '/FourHundredFour');
     }
    } else {
-    console.log('NOT authenticated, res.locals.user set null...');
+    console.log('GPR NOT authenticated, res.locals.user set null...');
     res.locals.user = null;
   }
-  console.log('calling next() after authentication...');
   next();
 });
 
 app.get('/api/auth/post-logout', async (req: any, res) => {
-  console.log('post log out...');
+  console.log('GPR post log out...');
   res.locals.user = null;
   res.locals.clientNum = null;
   res.clearCookie('auth');
