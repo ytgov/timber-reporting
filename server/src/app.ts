@@ -121,8 +121,8 @@ app.use(function (req, res, next) {
   if (req.oidc.isAuthenticated() ) {
    // console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
   //todo remove 1===1 for prod or test
-  //  if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' || 1===1) {
-    if ( process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
+    if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' || 1===1) {
+   // if ( process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
       console.log('setting user ',req.oidc.user);
       res.locals.user = req.oidc.user;
     } else {
