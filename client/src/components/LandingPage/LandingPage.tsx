@@ -43,7 +43,12 @@ export const LandingPage: React.FC = () => {
             <br />
             <strong>Have questions?</strong>
             <p>
-              For questions about reporting the amount of timber harvested, contact the Forest Management Branch. Email forestry@yukon.ca or phone 867-456-3999, toll free in Yukon 1-800-661-0408, extension 3999.
+              For questions about reporting the amount of timber harvested, contact the Forest Management Branch. Email
+              <a
+                  href={'mailto:forestry@yukon.ca'
+                  }
+              > forestry@yukon.ca
+                </a> or phone 867-456-3999, toll free in Yukon 1-800-661-0408, extension 3999.
             </p>
             <p>
               You can also {'  '}
@@ -61,16 +66,22 @@ export const LandingPage: React.FC = () => {
             </p>
             <p>
               <ol>
-                <li>Complete a harvest report form.
+                <li>Complete a
+                  <a href={'https://yukon.ca/en/forest-resources-harvest-report'}> harvest report form. </a>
                 </li>
-                <li>Submit your completed form at your local Compliance Monitoring and Inspections district office or email forestry@yukon.ca.
+                <li>Submit your completed form at your local Compliance Monitoring and Inspections district office or email
+                  <a
+                      href={'mailto:forestry@yukon.ca'
+                      }
+                  > forestry@yukon.ca.
+                  </a>
                 </li>
               </ol>
             </p>
             <strong>Data collection notice</strong>
             <p>
               Collection of this information is authorized under the authority of section 22(1)(h) and 24(1)(i)
-              of the <i>Forest Resources Act</i> (FRA) and section 15(a) & (c)(i) of the <i>Access to Information and
+              of the <i>Forest Resources Act</i> and section 15(a) & (c)(i) of the <i>Access to Information and
               Protection of Privacy Act</i> and will be used to fulfill reporting obligations under the <i>Forest Resources Act</i> and
               Regulations.{' '}
             </p>

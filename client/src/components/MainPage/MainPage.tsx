@@ -377,6 +377,13 @@ export const MainPage: React.FC = () => {
                               colSpan={requiredReports.filter((f) => e === f.permitId)[0].data.length + 1}
                               align={mobile ? 'left' : 'right'}
                             >
+                             {submittedPermit === e && overHarvest(e) && (
+                                  <Alert color={'warning'} toggle={() => setSubmittedPermit('')}>
+                                    Overharvest - Please contact forestry if further volume is required.
+                                    <br/>
+                                    Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
+                                  </Alert>
+                             )}
                              {submittedPermit === e && (
                                   <Alert color={'success'} toggle={() => setSubmittedPermit('')}>
                                     Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
@@ -442,7 +449,7 @@ export const MainPage: React.FC = () => {
                                       setErrorMessage('Missing harvest amount. You must enter a value for every month');
                                       setAttemptSubmit(e);
                                     } else {
-                                      if (!overHarvest(e)) {
+                                    //  if (!overHarvest(e)) {
                                         const x = await submitTimberHarvest(data);
                                         if (x === 1) {
                                           setSubmittedPermit(e);
@@ -460,11 +467,11 @@ export const MainPage: React.FC = () => {
                                             });
                                           });
                                         }
-                                      } else {
-                                        setPermitDisplayError(e);
-                                        setErrorMessage('Overharvest - Please contact forestry if further volume is required.');
-                                        setAttemptSubmit(e);
-                                      }
+                                  //    } else {
+                                    //    setPermitDisplayError(e);
+                                      //  setErrorMessage('Overharvest - Please contact forestry if further volume is required.');
+                                        //setAttemptSubmit(e);
+                                      //}
                                     }
                                   }}
                                 >
