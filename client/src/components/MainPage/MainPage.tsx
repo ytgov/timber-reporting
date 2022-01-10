@@ -384,7 +384,7 @@ export const MainPage: React.FC = () => {
                                     Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
                                   </Alert>
                              )}
-                             {submittedPermit === e && (
+                             {submittedPermit === e && !overHarvest(e) &&(
                                   <Alert color={'success'} toggle={() => setSubmittedPermit('')}>
                                     Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
                                   </Alert>
