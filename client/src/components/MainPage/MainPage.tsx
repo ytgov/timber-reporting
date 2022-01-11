@@ -116,7 +116,7 @@ export const MainPage: React.FC = () => {
           setErrorMessage('');
           const data = response.data.permits.map((e: IRequiredReport) => ({
             ...e,
-            processed: e.data.find((f) => !!f.quantity),
+            processed: e.data.find((f) => (!!f.quantity || f.quantity===0)),
           }));
           setRequiredReports(data);
         } else {
@@ -310,7 +310,9 @@ export const MainPage: React.FC = () => {
                                           <InputGroup>
                                             <Input
                                               style={{ textAlign: 'right' }}
-                                              value={g.quantity || '0' }
+                                             // value={g.quantity || '0' }
+
+                                                value={g.quantity}
                                               type={'text'}
                                               readOnly={res.processed}
                                               invalid={permitDisplayError === e && !g.quantity }
@@ -444,7 +446,7 @@ export const MainPage: React.FC = () => {
                                     const data = requiredReports
                                       .filter((rr) => rr.permitId === e)
                                       .reduce((prev: IData[], curr: IRequiredReport) => [...prev, ...curr.data], []);
-                                    if (data.find((d) => !d.quantity )) {
+                                    if (data.find((d) => (!d.quantity && d.quantity !== 0))) {
                                       setPermitDisplayError(e);
                                       setErrorMessage('Missing harvest amount. You must enter a value for every month');
                                       setAttemptSubmit(e);
