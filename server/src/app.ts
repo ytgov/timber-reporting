@@ -120,10 +120,9 @@ app.use(auth(config));
 app.use(function (req, res, next) {
   if (req.oidc.isAuthenticated() ) {
    // console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
-  //todo remove 1===1 for prod or test
-    if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' || 1===1) {
+    if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' ) {
    // if ( process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
-      console.log('setting user ',req.oidc.user);
+   //   console.log('setting user ',req.oidc.user);
       res.locals.user = req.oidc.user;
     } else {
       // req.url = '/api/auth/logout';
@@ -136,7 +135,7 @@ app.use(function (req, res, next) {
        //return res.redirect(process.env.HOST + '/FourHundredFour');
     }
    } else {
-    console.log('GPR NOT authenticated, res.locals.user set null...');
+   // console.log('GPR NOT authenticated, res.locals.user set null...');
     res.locals.user = null;
   }
   next();
