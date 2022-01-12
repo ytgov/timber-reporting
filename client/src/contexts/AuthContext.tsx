@@ -15,13 +15,17 @@ export interface AuthStateWithDispatch {
 export const AUTH_STATE_LOADING = 'AUTH_STATE_LOADING';
 export const AUTH_STATE_SIGNED_OUT = 'AUTH_STATE_SIGNED_OUT';
 export const AUTH_STATE_SIGNED_IN = 'AUTH_STATE_SIGNED_IN';
-export type AuthState = 'AUTH_STATE_LOADING' | 'AUTH_STATE_SIGNED_OUT' | 'AUTH_STATE_SIGNED_IN';
+export const AUTH_STATE_EMAIL_UNVERIFIED = 'AUTH_STATE_EMAIL_UNVERIFIED';
+
+
+export type AuthState = 'AUTH_STATE_LOADING' | 'AUTH_STATE_SIGNED_OUT' | 'AUTH_STATE_SIGNED_IN' | 'AUTH_STATE_EMAIL_UNVERIFIED';
 
 export const AUTH_ACTION_LOADING = 'AUTH_ACTION_LOADING';
 export const AUTH_ACTION_SIGN_OUT = 'AUTH_ACTION_SIGN_OUT';
 export const AUTH_ACTION_SIGN_IN = 'AUTH_ACTION_SIGN_IN';
+export const AUTH_ACTION_EMAIL_UNVERIFIED = 'AUTH_ACTION_EMAIL_UNVERIFIED';
 
-export type AuthAction = 'AUTH_ACTION_LOADING' | 'AUTH_ACTION_SIGN_IN' | 'AUTH_ACTION_SIGN_OUT';
+export type AuthAction = 'AUTH_ACTION_LOADING' | 'AUTH_ACTION_SIGN_IN' | 'AUTH_ACTION_SIGN_OUT' | 'AUTH_ACTION_EMAIL_UNVERIFIED';
 
 export const AuthContext = React.createContext<AuthStateWithDispatch>({
   state: { type: AUTH_STATE_LOADING },
@@ -37,6 +41,9 @@ const authReducer: React.Reducer<IAuthState, AuthAction> = (state: IAuthState, a
       return { type: AUTH_STATE_SIGNED_IN, expiringSoon: false };
     case AUTH_ACTION_SIGN_OUT:
       return { type: AUTH_STATE_SIGNED_OUT };
+    case AUTH_ACTION_EMAIL_UNVERIFIED:
+      return { type: AUTH_STATE_EMAIL_UNVERIFIED };
+
     default:
       return state;
   }
@@ -49,9 +56,12 @@ export const AuthProvider: React.FC = (props) => {
 
   useEffect(() => {
     const check = async () => {
-      if (await checkToken()) {
+      const result = await checkToken();
+      if (result=== 'OK') {
         dispatch(AUTH_ACTION_SIGN_IN);
-      } else {
+      } else if (result=== 'Email_Unverified') {
+        dispatch(AUTH_ACTION_EMAIL_UNVERIFIED);
+      } else  {
         dispatch(AUTH_ACTION_SIGN_OUT);
       }
     };

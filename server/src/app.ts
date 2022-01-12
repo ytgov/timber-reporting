@@ -128,12 +128,11 @@ app.use(function (req, res, next) {
     } else {
       // req.url = '/api/auth/logout';
       // return app._router.handle(req, res, next);
-       res.locals.user = null;
-       res.locals.clientNum = null;
-       res.clearCookie('auth');
-       res.clearCookie('appSession');
+      // res.locals.user = null;
+       ///res.locals.clientNum = null;
+       //res.clearCookie('auth');
+      //res.clearCookie('appSession');
        return res.status(403).send('Auth Email Not Verified');
-       //return res.redirect(process.env.HOST + '/FourHundredFour');
     }
    } else {
    // console.log('GPR NOT authenticated, res.locals.user set null...');
