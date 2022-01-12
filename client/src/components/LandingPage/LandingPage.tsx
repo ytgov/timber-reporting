@@ -25,7 +25,7 @@ export const LandingPage: React.FC = () => {
               Failure to report harvest volumes may affect your eligibility for future licences.
             </p>
             <br />
-            <p>
+
               <strong>Before you start </strong><br/>
               You need:<br/>
               <ul>
@@ -33,7 +33,7 @@ export const LandingPage: React.FC = () => {
               Choose the “Report your timber harvest volume” button to get started.
                 </li>
               </ul>
-            </p>
+
             <br />
             <div>
               <Button style={{
@@ -64,7 +64,7 @@ export const LandingPage: React.FC = () => {
             <p>
               If you prefer a printable version of this service, you can download a PDF and send it to Yukon government.
             </p>
-            <p>
+
               <ol>
                 <li>Complete a
                   <a href={'https://yukon.ca/en/forest-resources-harvest-report'}> harvest report form. </a>
@@ -77,7 +77,7 @@ export const LandingPage: React.FC = () => {
                   </a>
                 </li>
               </ol>
-            </p>
+
             <strong>Data collection notice</strong>
             <p>
               Collection of this information is authorized under the authority of section 22(1)(h) and 24(1)(i)
