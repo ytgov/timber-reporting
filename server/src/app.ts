@@ -83,6 +83,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors({
  // origin: '*'
+  //todo parameterize this?
   origin: ['http://localhost:88','https://yukon-staging.eu.auth0.com/','https://dev-0tc6bn14.eu.auth0.com/']
 }));
 app.use(function(req, res, next) {
@@ -119,7 +120,7 @@ app.use(auth(config));
 
 app.use(function (req, res, next) {
   if (req.oidc.isAuthenticated() ) {
-   // console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
+    console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
     if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' ) {
    // if ( process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
    //   console.log('setting user ',req.oidc.user);
