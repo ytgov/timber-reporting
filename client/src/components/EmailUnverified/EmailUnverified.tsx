@@ -2,15 +2,8 @@ import * as React from 'react';
 import { AuroraNavBar } from '../AuroraNavBar/AuroraNavbar';
 import { Button, Card, CardBody, Navbar, NavbarBrand } from 'reactstrap';
 import logo from '../../logo.svg';
-import { useHistory } from "react-router-dom";
 
 export const EmailUnverified: React.FC = () => {
-  const history = useHistory();
-  const handleRoute = () => {
-      console.log('logging out')
-      history.push("/api/auth/logout");
-  }
-
   return (
     <div>
       <Navbar expand={'xs'} className={'navigation-bar flex-wrap media-padding'}>
