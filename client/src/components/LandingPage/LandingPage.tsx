@@ -16,11 +16,10 @@ export const LandingPage: React.FC = () => {
       <div>
         <Card>
           <CardBody>
-            <h1>Report your commercial timber harvest volume.</h1>
+            <h1>Report your commercial timber harvest volumes</h1>
 
             <p>
-              Use this service to report the volume (in cubic metres) of
-              <a href={'https://yukon.ca/en/doing-business/permits-and-licensing/harvest-timber-or-firewood-sell'}> commercial timber or firewood you harvest. </a>
+              Use this service to report the volume (in cubic metres) of <a href={'https://yukon.ca/en/doing-business/permits-and-licensing/harvest-timber-or-firewood-sell'}>commercial timber or firewood you harvest</a>.
               Your cutting permit will specify when you need to report.
               Failure to report harvest volumes may affect your eligibility for future licences.
             </p>
@@ -30,7 +29,7 @@ export const LandingPage: React.FC = () => {
               You need:<br/>
               <ul>
                 <li>A Government of Yukon service account. If you don’t have an account, you will be able to create one.
-              Choose the “Report your timber harvest volume” button to get started.
+              Choose the “Start reporting your timber harvest” button to get started.
                 </li>
               </ul>
 
@@ -38,26 +37,22 @@ export const LandingPage: React.FC = () => {
             <div>
               <Button style={{
                 backgroundColor: '#00818f',
-              }}href={'/api/auth/login'}>Start reporting your timber harvest </Button>
+              }}href={'/api/auth/login'}>Start reporting your timber harvest</Button>
             </div>
             <br />
             <strong>Have questions?</strong>
             <p>
-              For questions about reporting the amount of timber harvested, contact the Forest Management Branch. Email
-              <a
+              For questions about reporting the amount of timber harvested, contact the Forest Management Branch. Email <a
                   href={'mailto:forestry@yukon.ca'
                   }
-              > forestry@yukon.ca
-                </a> or phone 867-456-3999, toll free in Yukon 1-800-661-0408, extension 3999.
+              >forestry@yukon.ca</a> or phone 867-456-3999, toll free in Yukon 1-800-661-0408, extension 3999.
             </p>
             <p>
               You can also {'  '}
               <a
                   href={'https://yukon.ca/en/your-government/find-government-office/find-compliance-monitoring-and-inspections-office'
                   }
-              >
-                visit a Compliance Monitoring and Inspections District office
-              </a> or the Forest Management Branch at 91807 Alaska Highway, Whitehorse.
+              >visit a Compliance Monitoring and Inspections District office</a> or the Forest Management Branch at 91807 Alaska Highway, Whitehorse.
             </p>
             <strong>Other ways to report
             </strong>
@@ -66,15 +61,13 @@ export const LandingPage: React.FC = () => {
             </p>
 
               <ol>
-                <li>Complete a
-                  <a href={'https://yukon.ca/en/forest-resources-harvest-report'}> harvest report form. </a>
+                <li>Complete a{' '}
+                  <a href={'https://yukon.ca/en/forest-resources-harvest-report'}>harvest report form</a>.
                 </li>
-                <li>Submit your completed form at your local Compliance Monitoring and Inspections district office or email
-                  <a
+                <li>Submit your completed form at your local Compliance Monitoring and Inspections district office or email <a
                       href={'mailto:forestry@yukon.ca'
                       }
-                  > forestry@yukon.ca.
-                  </a>
+                  >forestry@yukon.ca</a>.
                 </li>
               </ol>
 
@@ -93,8 +86,9 @@ export const LandingPage: React.FC = () => {
               <br />
               Forest Management Branch<br />
               Department of Energy, Mines and Resources<br />
-              Box 2703, Whitehorse, Yukon, Y1A 2C6<br />
-              Phone: 867-456-3999 or toll free at 1-800-661-0408 extension 3999
+              Box 2703<br/>
+              Whitehorse, Yukon &nbsp;&nbsp; Y1A 2C6<br />
+              Phone: 867-456-3999 or toll free at 1-800-661-0408, extension 3999
             </p>
           </CardBody>
         </Card>
