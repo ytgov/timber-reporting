@@ -7,6 +7,7 @@ module.exports = {
     'prettier/prettier': 'off',
     'jsx-quotes': ['error', 'prefer-single'],
     'func-style': ['error', 'expression'],
+     'no-unused-vars': 'off'
   },
   ignorePatterns: ['watch_output/', '**/types/'],
   env: {
