@@ -87,7 +87,7 @@ export const LandingPage: React.FC = () => {
               Forest Management Branch<br />
               Department of Energy, Mines and Resources<br />
               Box 2703<br/>
-              Whitehorse, Yukon &nbsp;&nbsp; Y1A 2C6<br />
+              Whitehorse, Yukon  Y1A 2C6<br />
               Phone: 867-456-3999 or toll free at 1-800-661-0408, extension 3999
             </p>
           </CardBody>
