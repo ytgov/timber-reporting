@@ -16,13 +16,18 @@ export const EmailUnverified: React.FC = () => {
       <div>
         <Card>
           <CardBody>
-            <h1>Report your commercial timber harvest volumes.</h1>
+            <h1>Report your commercial timber harvest volumes</h1>
 
             <p>
-              You have successfully created an account for reporting your timber harvest but you have yet to verify it.
+                You must verify your account in order to log in.
+                Please check your email and verify your account before logging in. If you are having trouble, contact the <a
+                    href={'https://yukon.ca/en/places/forest-management-branch '
+                    }
+                >Forest Management Branch</a>.
+                <br/><br/>
+                Phone: 867-456-3999
                 <br/>
-              Check your email at the address you used to create this account. You should have a new message asking you to verify your account.
-              Follow the instructions and try to login here again once you have finished verifying your account.
+                Email: <a href={'mailto:forestry@yukon.ca'}>forestry@yukon.ca</a>
                 <br/><br/>
                 <Button
                     color={'primary'}
@@ -31,7 +36,7 @@ export const EmailUnverified: React.FC = () => {
                         window.location.href='api/auth/logout';
                     }}
                 >
-                    Please Logout
+                    Continue
                 </Button>
             </p>
           </CardBody>
