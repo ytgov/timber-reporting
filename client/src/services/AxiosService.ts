@@ -13,7 +13,7 @@ const addErrorHandling = (ax: AxiosInstance) => {
 
   //    if (error.response && error.response.data && error.response.data.userMessage) {
       if (error.response && error.response.data ) {
-        console.log('Error includes UserMessage: ', error.response.data);
+//        console.log('Error includes UserMessage: ', error.response.data);
         return Promise.reject(error);
       }
 
