@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 
 import {
     AUTH_STATE_EMAIL_UNVERIFIED,
-    AUTH_STATE_LOADING,
+    AUTH_STATE_LOADING, AUTH_STATE_NO_ACCT_FOUND,
     AUTH_STATE_SIGNED_IN,
     AUTH_STATE_SIGNED_OUT,
     AuthContext
@@ -16,6 +16,7 @@ import { LandingPage } from 'components/LandingPage/LandingPage';
 import { PreviousReports } from 'components/MainPage/PreviousReports';
 import {FourHundredFour} from "./components/FourHundredFour/FourHundredFour";
 import {EmailUnverified} from "./components/EmailUnverified/EmailUnverified";
+import {NoAcctFound} from "./components/NoAcctFound/NoAcctFound";
 
 export const AppLayout = () => {
   const authContext = useContext(AuthContext);
@@ -70,6 +71,12 @@ export const AppLayout = () => {
             <EmailUnverified/>
         </Router>
       );
+    case AUTH_STATE_NO_ACCT_FOUND:
+          return (
+              <Router>
+                  <NoAcctFound/>
+              </Router>
+          );
     default:
       return (
         <Router>

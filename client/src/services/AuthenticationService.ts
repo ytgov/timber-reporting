@@ -2,13 +2,16 @@ import { authAxios } from './AxiosService';
 
 export const checkToken = async () => {
   return await authAxios.get('/api/checkToken').then(
+
     (response) => {
       return response.statusText === 'OK'?'OK':'KO';
     },
     (error) => {
-    //  console.log('GPR AuthenticationService error is ', error);
+     // console.log('GPR AuthenticationService error is ', error.response.data);
       if (error.response.data === 'Auth Email Not Verified') {
         return 'Email_Unverified';
+      } else if (error.response.data.userMessage === 'Not Authorized!') {
+        return 'No_Acct_Found';
       }
       let status = 0;
       if (error.response !== undefined) {
@@ -20,7 +23,6 @@ export const checkToken = async () => {
       } else {
         //    console.error('JWT Error handler', error);
       }
-
       return 'KO';
     }
   );

@@ -26,6 +26,7 @@ export const checkToken = async (req: Request, res: Response) => {
     return true;
   }
   await buildToken(req, res);
+  console.log('GPR checkToken returning 200 after await buildtoken');
   return res.statusCode === 200;
 };
 
@@ -49,6 +50,7 @@ const buildToken = async (req: Request, res: Response) => {
       res.cookie('auth', token, { secure: false, httpOnly: true, maxAge: Number(process.env.SESSION_LIFE) });
       res.status(200);
     } else {
+      console.log('GPR buildtoken returning 403, no clientnum');
       res.status(403);
     }
   } catch (error) {
@@ -119,12 +121,15 @@ app.use(auth(config));
 //});
 
 app.use(function (req, res, next) {
+ // console.log('GPR check authentication req is ',req.url);
   if (req.oidc.isAuthenticated() ) {
-   // console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
+  //  console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
     if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' ) {
    // if ( process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
    //   console.log('setting user ',req.oidc.user);
       res.locals.user = req.oidc.user;
+      //if (!checkToken(req,res)) {
+
     } else {
       // req.url = '/api/auth/logout';
       // return app._router.handle(req, res, next);
@@ -137,12 +142,15 @@ app.use(function (req, res, next) {
    } else {
    // console.log('GPR NOT authenticated, res.locals.user set null...');
     res.locals.user = null;
+    if (req.url === '/api/checkToken'){
+      return res.status(403).send('Not Logged In');
+    }
   }
   next();
 });
 
 app.get('/api/auth/post-logout', async (req: any, res) => {
-  console.log('GPR post log out...');
+ // console.log('GPR post log out...');
   res.locals.user = null;
   res.locals.clientNum = null;
   res.clearCookie('auth');
