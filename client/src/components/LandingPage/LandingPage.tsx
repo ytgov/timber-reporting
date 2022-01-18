@@ -88,7 +88,11 @@ export const LandingPage: React.FC = () => {
               Department of Energy, Mines and Resources<br />
               Box 2703<br/>
               Whitehorse, Yukon &nbsp;&nbsp; Y1A 2C6<br />
-              Phone: 867-456-3999 or toll free at 1-800-661-0408, extension 3999
+              Phone: 867-456-3999 or toll free at 1-800-661-0408, extension 3999<br/>
+              Email: <a
+                  href={'mailto:forestry@yukon.ca'
+                  }
+              >forestry@yukon.ca</a>
             </p>
           </CardBody>
         </Card>
