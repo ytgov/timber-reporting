@@ -26,7 +26,7 @@ export const checkToken = async (req: Request, res: Response) => {
     return true;
   }
   await buildToken(req, res);
-  console.log('GPR checkToken returning 200 after await buildtoken');
+  //console.log('GPR checkToken returning 200 after await buildtoken');
   return res.statusCode === 200;
 };
 
@@ -50,7 +50,7 @@ const buildToken = async (req: Request, res: Response) => {
       res.cookie('auth', token, { secure: false, httpOnly: true, maxAge: Number(process.env.SESSION_LIFE) });
       res.status(200);
     } else {
-      console.log('GPR buildtoken returning 403, no clientnum');
+     // console.log('GPR buildtoken returning 403, no clientnum');
       res.status(403);
     }
   } catch (error) {
