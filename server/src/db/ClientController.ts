@@ -70,7 +70,7 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
     let binds = [clientNum];
     let options = {
       outFormat: oracledb.OUT_FORMAT_OBJECT, // query result format
-      //resultSet: true
+      // resultSet: true
       // extendedMetaData: true,               // get extra metadata
       // prefetchRows:     100,                // internal buffer allocation size for tuning
       fetchArraySize: 100, // internal buffer allocation size for tuning
@@ -78,8 +78,6 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
     };
     const result = await connection.execute(sql, binds, options);
     const x = result.rows.map(async (e: any, i: number) => {
-      //       console.log('e is: ');
-      //       console.log(e);
       const innerSQL =
         'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3';
       let binds = [e.TEN_APPL_COMMERCIAL_ID, e.TEN_PERMIT_SCHEDULE_ID, clientNum];
@@ -90,7 +88,7 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
         return {
           rate: f.RATE,
           productType: f.PRODUCT + ' ' + f.TIMBER_TYPE + ' ' + f.REMAINING_VOLUME + ' m\u00B3 remaining',
-      //    quantity: f.VOLUME || 0,
+          // quantity: f.VOLUME || 0,
           quantity: f.VOLUME,
           permitReportId: f.TEN_PERMIT_SCHED_PROD_ID,
           permitProductId: f.TEN_PERMIT_PRODUCT_ID,
@@ -110,7 +108,6 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
         blockNumber: retInner.rows[0].BLOCK_NUMBER,
         data: data,
       };
-      //     console.log(y);
       return y as IPermitReportMonthData;
     });
     return await Promise.all(x);
@@ -176,7 +173,6 @@ export const selectPastReportsORCL = async (clientNum: number) => {
         blockNumber: retInner.rows[0].BLOCK_NUMBER,
         data: data,
       };
-      //   console.log(y);
       return y as IPermitReportMonthData;
     });
     return await Promise.all(x);
@@ -212,7 +208,7 @@ export const insertPermitReportMonthDataORCL = async (data: IData, clientNum: nu
       'when not matched then ' +
       '  INSERT (TEN_PERMIT_SCHED_PROD_ID, VOLUME, STATUS, REC_CREATE_DATE, REC_CREATE_USER, TEN_PERMIT_PRODUCT_ID,TEN_PERMIT_SCHEDULE_ID,SOURCE) ' +
       "               values(:1,:2,'PENDING', sysdate, :5,:3,:4,:6)";
-    // console.log(' Binds are ' + clientNum + data.permitReportId + ' ' + data.quantity + ' ' + source);
+
     let binds = [
       data.permitReportId,
       data.quantity.toString(),
@@ -231,7 +227,6 @@ export const insertPermitReportMonthDataORCL = async (data: IData, clientNum: nu
       // autocommit:          true
     };
     await connection.execute(sql, binds, options);
-    //console.log("Rows inserted: " + result.rowsAffected+ ' rowid ' + result.lastRowid);
     await connection.commit();
     return 1;
   } catch (error) {
@@ -260,13 +255,11 @@ export const getValidCodeORCL = async (email: string) => {
       p1: email,
       p3: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
     });
-    //console.log(result.outBinds);
     return result.outBinds.p3;
   } catch (error) {
     console.error(error);
     return 0;
   } finally {
-    //console.log('entered Finally');
     if (connection) {
       try {
         await connection.close();

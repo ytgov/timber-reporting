@@ -18,8 +18,12 @@ export const AUTH_STATE_SIGNED_IN = 'AUTH_STATE_SIGNED_IN';
 export const AUTH_STATE_EMAIL_UNVERIFIED = 'AUTH_STATE_EMAIL_UNVERIFIED';
 export const AUTH_STATE_NO_ACCT_FOUND = 'AUTH_STATE_NO_ACCT_FOUND';
 
-
-export type AuthState = 'AUTH_STATE_LOADING' | 'AUTH_STATE_SIGNED_OUT' | 'AUTH_STATE_SIGNED_IN' | 'AUTH_STATE_EMAIL_UNVERIFIED' | 'AUTH_STATE_NO_ACCT_FOUND';
+export type AuthState =
+  | 'AUTH_STATE_LOADING'
+  | 'AUTH_STATE_SIGNED_OUT'
+  | 'AUTH_STATE_SIGNED_IN'
+  | 'AUTH_STATE_EMAIL_UNVERIFIED'
+  | 'AUTH_STATE_NO_ACCT_FOUND';
 
 export const AUTH_ACTION_LOADING = 'AUTH_ACTION_LOADING';
 export const AUTH_ACTION_SIGN_OUT = 'AUTH_ACTION_SIGN_OUT';
@@ -27,7 +31,12 @@ export const AUTH_ACTION_SIGN_IN = 'AUTH_ACTION_SIGN_IN';
 export const AUTH_ACTION_EMAIL_UNVERIFIED = 'AUTH_ACTION_EMAIL_UNVERIFIED';
 export const AUTH_ACTION_NO_ACCT_FOUND = 'AUTH_ACTION_NO_ACCT_FOUND';
 
-export type AuthAction = 'AUTH_ACTION_LOADING' | 'AUTH_ACTION_SIGN_IN' | 'AUTH_ACTION_SIGN_OUT' | 'AUTH_ACTION_EMAIL_UNVERIFIED' | 'AUTH_ACTION_NO_ACCT_FOUND';
+export type AuthAction =
+  | 'AUTH_ACTION_LOADING'
+  | 'AUTH_ACTION_SIGN_IN'
+  | 'AUTH_ACTION_SIGN_OUT'
+  | 'AUTH_ACTION_EMAIL_UNVERIFIED'
+  | 'AUTH_ACTION_NO_ACCT_FOUND';
 
 export const AuthContext = React.createContext<AuthStateWithDispatch>({
   state: { type: AUTH_STATE_LOADING },
@@ -35,7 +44,6 @@ export const AuthContext = React.createContext<AuthStateWithDispatch>({
 });
 
 const authReducer: React.Reducer<IAuthState, AuthAction> = (state: IAuthState, action: AuthAction) => {
-  console.log(`IN REDUCER STATE: ${state.type}  ACTION: ${action} `);
   switch (action) {
     case AUTH_ACTION_LOADING:
       return { type: AUTH_STATE_LOADING };
@@ -60,14 +68,13 @@ export const AuthProvider: React.FC = (props) => {
   useEffect(() => {
     const check = async () => {
       const result = await checkToken();
-  //    console.log('GPR returned from checkToken, ',result);
-      if (result=== 'OK') {
+      if (result === 'OK') {
         dispatch(AUTH_ACTION_SIGN_IN);
       } else if (result === 'Email_Unverified') {
         dispatch(AUTH_ACTION_EMAIL_UNVERIFIED);
       } else if (result === 'No_Acct_Found') {
         dispatch(AUTH_ACTION_NO_ACCT_FOUND);
-      } else  {
+      } else {
         dispatch(AUTH_ACTION_SIGN_OUT);
       }
     };

@@ -9,7 +9,6 @@ apiRouter.get('/checkToken', async (req: Request, res: Response) => {
   if (await checkToken(req, res)) {
     res.send({ status: 200 });
   } else {
-//    console.log('GPR returning 403 Not Authorized! from checktoken');
     res.send({ status: 403, userMessage: 'Not Authorized!' });
   }
 });

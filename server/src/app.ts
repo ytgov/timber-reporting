@@ -26,7 +26,6 @@ export const checkToken = async (req: Request, res: Response) => {
     return true;
   }
   await buildToken(req, res);
-  //console.log('GPR checkToken returning 200 after await buildtoken');
   return res.statusCode === 200;
 };
 
@@ -50,7 +49,6 @@ const buildToken = async (req: Request, res: Response) => {
       res.cookie('auth', token, { secure: false, httpOnly: true, maxAge: Number(process.env.SESSION_LIFE) });
       res.status(200);
     } else {
-     // console.log('GPR buildtoken returning 403, no clientnum');
       res.status(403);
     }
   } catch (error) {
@@ -70,7 +68,6 @@ const getClientFromJWT = async (req: Request) => {
     }
     return clientNum;
   } catch (error) {
-    //   console.log('GPR could not read cookie');
     console.error(error);
     return clientNum;
   }
@@ -83,16 +80,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors({
- // origin: '*'
-  //todo parameterize this?
-  origin: ['http://localhost:88','https://yukon-staging.eu.auth0.com/','https://dev-0tc6bn14.eu.auth0.com/']
-}));
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+app.use(
+  cors({
+    // origin: '*'
+    //todo parameterize this?
+    origin: ['http://localhost:88', 'https://yukon-staging.eu.auth0.com/', 'https://dev-0tc6bn14.eu.auth0.com/'],
+  })
+);
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
-})
+});
 const { auth } = require('express-openid-connect');
 
 const config = {
@@ -113,36 +112,22 @@ const config = {
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
-//app.use((req, res, next) => {
-//  res.append('Access-Control-Allow-Origin', ['*']);
-//  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//  res.append('Access-Control-Allow-Headers', 'Content-Type');
-//  next();
-//});
-
 app.use(function (req, res, next) {
- // console.log('GPR check authentication req is ',req.url);
-  if (req.oidc.isAuthenticated() ) {
-  //  console.log(req.oidc.user.name, '   authenticated, verified is ',req.oidc.user.email_verified, ' AUTH_EMAIL_VERIFIED_FLAG is ', process.env.AUTH_EMAIL_VERIFIED_FLAG);
-    if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE' ) {
-   // if ( process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
-   //   console.log('setting user ',req.oidc.user);
+  if (req.oidc.isAuthenticated()) {
+    if (req.oidc.user.email_verified || process.env.AUTH_EMAIL_VERIFIED_FLAG === 'TRUE') {
       res.locals.user = req.oidc.user;
-      //if (!checkToken(req,res)) {
-
     } else {
       // req.url = '/api/auth/logout';
       // return app._router.handle(req, res, next);
       // res.locals.user = null;
-       ///res.locals.clientNum = null;
-       //res.clearCookie('auth');
+      ///res.locals.clientNum = null;
+      //res.clearCookie('auth');
       //res.clearCookie('appSession');
-       return res.status(403).send('Auth Email Not Verified');
+      return res.status(403).send('Auth Email Not Verified');
     }
-   } else {
-   // console.log('GPR NOT authenticated, res.locals.user set null...');
+  } else {
     res.locals.user = null;
-    if (req.url === '/api/checkToken'){
+    if (req.url === '/api/checkToken') {
       return res.status(403).send('Not Logged In');
     }
   }
@@ -150,7 +135,6 @@ app.use(function (req, res, next) {
 });
 
 app.get('/api/auth/post-logout', async (req: any, res) => {
- // console.log('GPR post log out...');
   res.locals.user = null;
   res.locals.clientNum = null;
   res.clearCookie('auth');
@@ -176,7 +160,6 @@ app.use(router);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   const err = new Error('Not Found');
-  //err.status = 404;
   next(err);
 });
 
