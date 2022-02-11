@@ -16,28 +16,28 @@ export const NoAcctFound: React.FC = () => {
       <div>
         <Card>
           <CardBody>
-            <h1>Report your commercial timber harvest volumes</h1>
+            <h1>Report your commercial timber harvest volumes.</h1>
 
             <p>
-                There are no permits associated with this email address.
-                Please ensure that you use the email address on file with the Forest Management Branch. If you are having trouble, contact the <a
-                    href={'https://yukon.ca/en/places/forest-management-branch '
-                    }
-                >Forest Management Branch</a>.
-                <br/><br/>
-                Phone: 867-456-3999
-                <br/>
-                Email: <a href={'mailto:forestry@yukon.ca'}>forestry@yukon.ca</a>
-                <br/><br/>
-                <Button
-                    color={'primary'}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        window.location.href='api/auth/logout';
-                    }}
-                >
-                    Continue
-                </Button>
+              There are no permits associated with this email address. Please ensure that you use the email address on
+              file with the Forest Management Branch. If you are having trouble, contact the{' '}
+              <a href={'https://yukon.ca/en/places/forest-management-branch '}>Forest Management Branch</a>.
+              <br />
+              <br />
+              Phone: 867-456-3999
+              <br />
+              Email: <a href={'mailto:forestry@yukon.ca'}>forestry@yukon.ca</a>
+              <br />
+              <br />
+              <Button
+                color={'primary'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = 'api/auth/logout';
+                }}
+              >
+                Continue
+              </Button>
             </p>
           </CardBody>
         </Card>
