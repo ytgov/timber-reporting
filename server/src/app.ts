@@ -101,6 +101,11 @@ const config = {
   baseURL: process.env.HOST,
   clientID: process.env.AUTH_CLIENT_ID,
   issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL,
+  session: {
+    cookie: {
+      domain: 'report-timber-harvest.service.yukon.ca',
+    },
+  },
   routes: {
     login: '/api/auth/login',
     logout: '/api/auth/logout',
