@@ -84,7 +84,12 @@ app.use(
   cors({
     // origin: '*'
     //todo parameterize this?
-    origin: ['http://localhost:88', 'https://yukon-staging.eu.auth0.com/', 'https://dev-0tc6bn14.eu.auth0.com/'],
+    origin: [
+      'http://localhost:88',
+      'https://yukon-staging.eu.auth0.com/',
+      'https://dev-0tc6bn14.eu.auth0.com/',
+      'https://sign-in.service.yukon.ca',
+    ],
   })
 );
 app.use(function (req, res, next) {
