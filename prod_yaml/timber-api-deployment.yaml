@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-test.yml
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: timber-api
+  name: timber-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: timber-api
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-test.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: timber-api
+    spec:
+      containers:
+        - env:
+            - name: NODE_ENV
+              value: production
+          image: 10.230.5.2/ict-dmz-ns/timber-api:latest
+          name: timber-api
+          resources: {}
+          #          volumeMounts:
+          #            - mountPath: "/usr/src/app/.env"
+          #              subPath: .env
+          #              name: env-configmap-volume
+          envFrom:
+            - secretRef:
+                name: env-secrets
+
+      restartPolicy: Always
+
+      #      volumes:
+      #        - name: env-configmap-volume
+      #          configMap:
+      #            name: env-configmap
+
+      imagePullSecrets:
+        - name: ict-dmz-ns-timberreporting-default-image-pull-secret
+status: {}
