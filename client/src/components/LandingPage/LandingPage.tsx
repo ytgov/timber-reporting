@@ -16,7 +16,7 @@ export const LandingPage: React.FC = () => {
       <div>
         <Card>
           <CardBody>
-            <h1>Report your commercial timber harvest volumes.</h1>
+            <h1>Report your commercial timber harvest volumes..</h1>
             <p>
               Use this service to report the volume (in cubic metres) of{' '}
               <a href={'https://yukon.ca/en/doing-business/permits-and-licensing/harvest-timber-or-firewood-sell'}>

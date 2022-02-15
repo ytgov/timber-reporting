@@ -86,22 +86,15 @@ export const MainPage: React.FC = () => {
   };
 
   const overHarvest = (permitId: string) => {
-    const tot = (requiredReports
-          .filter((rr) => rr.permitId === permitId)
-          .reduce(
-              (prev: number, curr: IRequiredReport) =>
-                  prev +
-                  curr.data.reduce(
-                      (prev2: number, curr2: IData) => prev2 + (curr2.quantity*1),
-                      0
-                  ),
-              0
-          ));
-      const remain = requiredReports
-          .filter((f) => permitId === f.permitId)[0]
-          .data.map((f, i) => (
-              f.remainingVolume ));
-;     return tot > remain[0];
+    const tot = requiredReports
+      .filter((rr) => rr.permitId === permitId)
+      .reduce(
+        (prev: number, curr: IRequiredReport) =>
+          prev + curr.data.reduce((prev2: number, curr2: IData) => prev2 + curr2.quantity * 1, 0),
+        0
+      );
+    const remain = requiredReports.filter((f) => permitId === f.permitId)[0].data.map((f, i) => f.remainingVolume);
+    return tot > remain[0];
   };
 
   const refresh = () => {
@@ -116,7 +109,7 @@ export const MainPage: React.FC = () => {
           setErrorMessage('');
           const data = response.data.permits.map((e: IRequiredReport) => ({
             ...e,
-            processed: e.data.find((f) => (!!f.quantity || f.quantity===0)),
+            processed: e.data.find((f) => !!f.quantity || f.quantity === 0),
           }));
           setRequiredReports(data);
         } else {
@@ -143,7 +136,7 @@ export const MainPage: React.FC = () => {
         <AuroraNavBar>
           Welcome to the Timber Harvest Reporting application.
           <br />
-          You can report on any outstanding harvest volumes.
+          You can report on any outstanding harvest volumes..
           <br />
           Reporting is required in cubic metres.
         </AuroraNavBar>
@@ -310,25 +303,25 @@ export const MainPage: React.FC = () => {
                                           <InputGroup>
                                             <Input
                                               style={{ textAlign: 'right' }}
-                                             // value={g.quantity || '0' }
+                                              // value={g.quantity || '0' }
 
-                                                value={g.quantity}
+                                              value={g.quantity}
                                               type={'text'}
                                               readOnly={res.processed}
-                                              invalid={permitDisplayError === e && !g.quantity }
+                                              invalid={permitDisplayError === e && !g.quantity}
                                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 var valueChar = e.target.value;
                                                 var value = 0;
 
-                                                if(!valueChar) {
+                                                if (!valueChar) {
                                                   value = 0;
                                                 } else {
                                                   value = parseFloat(valueChar);
-                                                  if (!value || isNaN(value) ) {
+                                                  if (!value || isNaN(value)) {
                                                     value = 0;
                                                   }
                                                 }
-                                                valueChar = value+'';
+                                                valueChar = value + '';
                                                 setRequiredReports((a: IRequiredReport[]) => {
                                                   const pIndex = a.findIndex((b) =>
                                                     b.data.find((c) => c.permitReportId === g.permitReportId)
@@ -374,33 +367,36 @@ export const MainPage: React.FC = () => {
                         </tbody>
                         <tfoot>
                           <tr>
-
                             <td
                               colSpan={requiredReports.filter((f) => e === f.permitId)[0].data.length + 1}
                               align={mobile ? 'left' : 'right'}
                             >
-                             {submittedPermit === e && overHarvest(e) && (
-                                  <Alert color={'warning'} toggle={() => setSubmittedPermit('')}>
-                                    Overharvest - Please contact forestry if further volume is required.
-                                    <br/>
-                                    Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
-                                  </Alert>
-                             )}
-                             {submittedPermit === e && !overHarvest(e) &&(
-                                  <Alert color={'success'} toggle={() => setSubmittedPermit('')}>
-                                    Thank you for submitting your harvest information. You can edit the data for up to 24 hours. An invoice will be sent to you. You don’t need to do anything. If you have questions please contact forestry at 867.456.3999
-                                  </Alert>
+                              {submittedPermit === e && overHarvest(e) && (
+                                <Alert color={'warning'} toggle={() => setSubmittedPermit('')}>
+                                  Overharvest - Please contact forestry if further volume is required.
+                                  <br />
+                                  Thank you for submitting your harvest information. You can edit the data for up to 24
+                                  hours. An invoice will be sent to you. You don’t need to do anything. If you have
+                                  questions please contact forestry at 867.456.3999
+                                </Alert>
+                              )}
+                              {submittedPermit === e && !overHarvest(e) && (
+                                <Alert color={'success'} toggle={() => setSubmittedPermit('')}>
+                                  Thank you for submitting your harvest information. You can edit the data for up to 24
+                                  hours. An invoice will be sent to you. You don’t need to do anything. If you have
+                                  questions please contact forestry at 867.456.3999
+                                </Alert>
                               )}
                               {attemptSubmit === e && errorMessage && submittedPermit !== e && (
-                                  <Alert
-                                      color={'danger'}
-                                      toggle={() => {
-                                        setAttemptSubmit('');
-                                        setErrorMessage('');
-                                      }}
-                                  >
-                                    {errorMessage}
-                                  </Alert>
+                                <Alert
+                                  color={'danger'}
+                                  toggle={() => {
+                                    setAttemptSubmit('');
+                                    setErrorMessage('');
+                                  }}
+                                >
+                                  {errorMessage}
+                                </Alert>
                               )}
                               {requiredReports.find((rr) => rr.permitId === e)?.processed && (
                                 <>
@@ -446,33 +442,33 @@ export const MainPage: React.FC = () => {
                                     const data = requiredReports
                                       .filter((rr) => rr.permitId === e)
                                       .reduce((prev: IData[], curr: IRequiredReport) => [...prev, ...curr.data], []);
-                                    if (data.find((d) => (!d.quantity && d.quantity !== 0))) {
+                                    if (data.find((d) => !d.quantity && d.quantity !== 0)) {
                                       setPermitDisplayError(e);
                                       setErrorMessage('Missing harvest amount. You must enter a value for every month');
                                       setAttemptSubmit(e);
                                     } else {
-                                    //  if (!overHarvest(e)) {
-                                        const x = await submitTimberHarvest(data);
-                                        if (x === 1) {
-                                          setSubmittedPermit(e);
-                                          setRequiredReports((a: IRequiredReport[]) => {
-                                            return a.map((b) => {
-                                              if (b.permitId === e) {
-                                                return {
-                                                  ...b,
-                                                  processed: true,
-                                                  editing: false,
-                                                };
-                                              } else {
-                                                return b;
-                                              }
-                                            });
+                                      //  if (!overHarvest(e)) {
+                                      const x = await submitTimberHarvest(data);
+                                      if (x === 1) {
+                                        setSubmittedPermit(e);
+                                        setRequiredReports((a: IRequiredReport[]) => {
+                                          return a.map((b) => {
+                                            if (b.permitId === e) {
+                                              return {
+                                                ...b,
+                                                processed: true,
+                                                editing: false,
+                                              };
+                                            } else {
+                                              return b;
+                                            }
                                           });
-                                        }
-                                  //    } else {
-                                    //    setPermitDisplayError(e);
+                                        });
+                                      }
+                                      //    } else {
+                                      //    setPermitDisplayError(e);
                                       //  setErrorMessage('Overharvest - Please contact forestry if further volume is required.');
-                                        //setAttemptSubmit(e);
+                                      //setAttemptSubmit(e);
                                       //}
                                     }
                                   }}
