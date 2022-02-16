@@ -43,7 +43,7 @@ const buildToken = async (req: Request, res: Response) => {
           clientNum: clientNum,
         },
         jwtTokenSecret,
-        { expiresIn: '10m' }
+        { expiresIn: '24h' }
       );
       res.locals.clientNum = clientNum;
       res.cookie('auth', token, { secure: false, httpOnly: true, maxAge: Number(process.env.SESSION_LIFE) });
