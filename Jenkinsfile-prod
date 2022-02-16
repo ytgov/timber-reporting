@@ -74,6 +74,16 @@ pipeline {
 
     }
     post {
+        always {
+            emailext (
+                to: 'shu-jun.lin@yukon.ca',
+                replyTo: 'shu-jun.lin@yukon.ca',
+                subject: '$DEFAULT_SUBJECT',
+                body: '$DEFAULT_CONTENT',
+                mimeType: 'text/html'
+            );
+        }
+
         success {
             echo 'Build complete'
         }
