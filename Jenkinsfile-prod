@@ -20,13 +20,10 @@ pipeline {
             steps {
                 dir('server') {
                     sh 'npm i'
-                    //sh 'npm install pg'
-                    //sh 'npm install --save-dev @types/pg'
                     sh 'npm run build'
                 }
                 dir('client') {
                     sh 'npm i'
-                  //sh 'npm i bootstrap'
                     sh 'npm run build-css'
                     sh 'npm run build'
                 }
