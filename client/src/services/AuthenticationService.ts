@@ -3,9 +3,6 @@ import { authAxios } from './AxiosService';
 export const checkToken = async () => {
   return await authAxios.get('/api/checkToken').then(
     (response) => {
-      console.log(response);
-      console.log('STATUS', response.status);
-      console.log('STATUS TEXT', response.statusText);
       return response.status === 200 ? 'OK' : 'KO';
     },
     (error) => {

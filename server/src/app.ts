@@ -82,7 +82,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   cors({
-    origin: '*',
+    origin: [
+      'http://localhost:88',
+      'https://yukon-staging.eu.auth0.com',
+      'https://dev-0tc6bn14.eu.auth0.com',
+      'https://sign-in.service.yukon.ca',
+    ],
   })
 );
 app.use(function (req, res, next) {
@@ -99,11 +104,6 @@ const config = {
   baseURL: process.env.HOST,
   clientID: process.env.AUTH_CLIENT_ID,
   issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL,
-  session: {
-    cookie: {
-      domain: 'report-timber-harvest.service.yukon.ca',
-    },
-  },
   routes: {
     login: '/api/auth/login',
     logout: '/api/auth/logout',
@@ -157,8 +157,6 @@ app.get('/api/health-check', async (req: any, res) => {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
-app.set('trust proxy', true);
 
 app.use(router);
 

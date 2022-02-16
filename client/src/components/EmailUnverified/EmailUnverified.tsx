@@ -16,7 +16,7 @@ export const EmailUnverified: React.FC = () => {
       <div>
         <Card>
           <CardBody>
-            <h1>Report your commercial timber harvest volumes....</h1>
+            <h1>Report your commercial timber harvest volumes</h1>
 
             <p>
               You must verify your account in order to log in. Please check your email and verify your account before

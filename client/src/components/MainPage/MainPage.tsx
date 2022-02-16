@@ -136,7 +136,7 @@ export const MainPage: React.FC = () => {
         <AuroraNavBar>
           Welcome to the Timber Harvest Reporting application.
           <br />
-          You can report on any outstanding harvest volumes....
+          You can report on any outstanding harvest volumes
           <br />
           Reporting is required in cubic metres.
         </AuroraNavBar>
