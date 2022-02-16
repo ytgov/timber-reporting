@@ -16,7 +16,7 @@ export const NoAcctFound: React.FC = () => {
       <div>
         <Card>
           <CardBody>
-            <h1>Report your commercial timber harvest volumes...</h1>
+            <h1>Report your commercial timber harvest volumes....</h1>
 
             <p>
               There are no permits associated with this email address. Please ensure that you use the email address on
