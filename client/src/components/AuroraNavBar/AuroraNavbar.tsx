@@ -19,10 +19,9 @@ export const AuroraNavBar: React.FC = (props) => {
             height: 100,
           }}
         >
-          {' '}
           {props.children}
         </div>
-        {!hideBanner && (
+        {(!hideBanner || !props.children) && (
           <div
             style={{
               flex: 1,
