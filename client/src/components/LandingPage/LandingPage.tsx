@@ -2,7 +2,6 @@ import * as React from 'react';
 import { AuroraNavBar } from '../AuroraNavBar/AuroraNavbar';
 import { Button, Card, CardBody, Navbar, NavbarBrand } from 'reactstrap';
 import logo from '../../logo.svg';
-import { borderRadius } from 'react-select/src/theme';
 
 export const LandingPage: React.FC = () => {
   return (
