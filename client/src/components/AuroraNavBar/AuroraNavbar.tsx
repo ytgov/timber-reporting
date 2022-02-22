@@ -9,14 +9,14 @@ export const AuroraNavBar: React.FC = (props) => {
 
   return (
     <Navbar color={'light'} light={true} expand={'xs'} style={{ borderTop: '5px solid #ffcd57', overflow: 'hidden' }}>
-      <NavbarBrand className={'mr-auto media-padding d-flex'} style={{ flex: 1, height: 100 }}>
+      <NavbarBrand className={'mr-auto media-padding d-flex'} style={{ flex: 1 }}>
         <div
           style={{
             textAlign: 'center',
             flex: 5,
             justifyContent: 'flex-start',
-            bottom: '13px',
-            height: 100,
+            whiteSpace: 'normal',
+            minHeight: 100,
           }}
         >
           {props.children}

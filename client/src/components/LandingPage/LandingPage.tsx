@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AuroraNavBar } from '../AuroraNavBar/AuroraNavbar';
 import { Button, Card, CardBody, Navbar, NavbarBrand } from 'reactstrap';
 import logo from '../../logo.svg';
+import { borderRadius } from 'react-select/src/theme';
 
 export const LandingPage: React.FC = () => {
   return (
@@ -14,7 +15,7 @@ export const LandingPage: React.FC = () => {
       </Navbar>
       <AuroraNavBar />
       <div>
-        <Card>
+        <Card style={{ borderRadius: 0, border: 0 }}>
           <CardBody>
             <h1>Report your commercial timber harvest volumes</h1>
             <p>
