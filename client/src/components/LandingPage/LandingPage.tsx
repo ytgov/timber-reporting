@@ -15,7 +15,7 @@ export const LandingPage: React.FC = () => {
       </Navbar>
       <AuroraNavBar />
       <div>
-        <Card style={{ borderRadius: 0, border: 0 }}>
+        <Card style={{ border: 0 }}>
           <CardBody>
             <h1>Report your commercial timber harvest volumes</h1>
             <p>

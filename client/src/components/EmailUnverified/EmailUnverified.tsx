@@ -14,7 +14,7 @@ export const EmailUnverified: React.FC = () => {
       </Navbar>
       <AuroraNavBar />
       <div>
-        <Card>
+        <Card style={{ border: 0 }}>
           <CardBody>
             <h1>Report your commercial timber harvest volumes</h1>
 
