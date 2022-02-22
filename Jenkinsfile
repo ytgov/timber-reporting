@@ -74,12 +74,34 @@ pipeline {
 
     }
     post {
+        always {
+            emailext (
+                to: 'shu-jun.lin@yukon.ca',
+                subject: '$DEFAULT_SUBJECT',
+                body: '$DEFAULT_CONTENT',
+                mimeType: 'text/html'
+            );
+        }
+
         success {
+            emailext (
+                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com',
+                subject: '$DEFAULT_SUBJECT',
+                body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has succeeded',
+                mimeType: 'text/html'
+            );
             echo 'Build complete'
         }
         failure {
+            emailext (
+                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com',
+                subject: '$DEFAULT_SUBJECT',
+                body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has failed',
+                mimeType: 'text/html'
+            );
             echo 'Build failed'
         }
     }
+
 }
 
