@@ -85,7 +85,7 @@ pipeline {
 
         success {
             emailext (
-                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com',
+                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com,jobina.tamminga@makeit.com',
                 subject: '$DEFAULT_SUBJECT',
                 body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has succeeded',
                 mimeType: 'text/html'
@@ -94,13 +94,14 @@ pipeline {
         }
         failure {
             emailext (
-                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com',
+                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com,jobina.tamminga@makeit.com',
                 subject: '$DEFAULT_SUBJECT',
                 body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has failed',
                 mimeType: 'text/html'
             );
             echo 'Build failed'
         }
+
     }
 
 }
