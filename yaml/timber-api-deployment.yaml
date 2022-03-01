@@ -27,7 +27,7 @@ spec:
         - env:
             - name: NODE_ENV
               value: production
-          image: 10.230.5.2/eserv-tst-ns/timber-api:latest
+          image: 10.230.7.2/eserv-tst-ns/timber-api:latest
           name: timber-api
           resources: {}
           #          volumeMounts:

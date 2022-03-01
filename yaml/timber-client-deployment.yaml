@@ -24,7 +24,7 @@ spec:
         io.kompose.service: timber-client
     spec:
       containers:
-        - image: 10.230.5.2/eserv-tst-ns/timber-client:latest
+        - image: 10.230.7.2/eserv-tst-ns/timber-client:latest
           name: timber-client
           resources: {}
       imagePullSecrets:
