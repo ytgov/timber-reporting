@@ -24,10 +24,10 @@ spec:
         io.kompose.service: timber-client
     spec:
       containers:
-        - image: 10.230.5.2/ict-dmz-ns/timber-client:latest
+        - image: 10.230.7.2/yg-dmz-ns/timber-client:latest
           name: timber-client
           resources: {}
       imagePullSecrets:
-        - name: ict-dmz-ns-timberreporting-default-image-pull-secret
+        - name: yg-dmz-ns-timberreporting-image-pull-secret
       restartPolicy: Always
 status: {}

@@ -47,6 +47,6 @@ spec:
   tls:
     secretName: prod-timberreporting-tls-secret
     #domains:
-    #- main: report-timber-harvest.service.yukon.ca
-    #sans:
-    #- report-timber-harvest.service.yukon.ca
+            #- main: report-timber-harvest.service.yukon.ca
+      #sans:
+      #- report-timber-harvest.service.yukon.ca
