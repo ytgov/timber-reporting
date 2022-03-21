@@ -24,7 +24,7 @@ server {
            expires epoch;
            proxy_pass http://server-api;
        }
-       
+
    location /test {
        return 200 'here!';
        add_header Content-Type text/plain;
