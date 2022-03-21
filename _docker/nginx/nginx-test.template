@@ -20,6 +20,11 @@ server {
         proxy_pass http://server-api;
            }
 
+   location /ivr {
+           expires epoch;
+           proxy_pass http://server-api;
+       }
+
     location /sockjs-node/ {
         expires epoch;
         proxy_pass http://client-api;
