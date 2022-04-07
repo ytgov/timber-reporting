@@ -56,6 +56,7 @@ ivrRouter.post('/handle-permit-month-selection', async (req: Request, res: Respo
   res.send(await handlePermitMonthSelection(req));
 });
 
+// POST: /ivr/handle-confirm-zero-remaining-data
 ivrRouter.post('/handle-confirm-zero-remaining-data', async (req: Request, res: Response) => {
   res.send(await handleConfirmZeroRemainingData(req));
 });
