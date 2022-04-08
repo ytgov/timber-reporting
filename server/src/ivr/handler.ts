@@ -100,25 +100,35 @@ export const gatherPermitSelection = async (req: Request) => {
     console.log('------------------------------------------------------------------------------');
     const voiceResponse = new VoiceResponse();
 
-    const permitSelections = await selectRequiredReportsRegistrationNumberORCL((req.session as any).regNum);
-    (req.session as any).permitSelections = permitSelections;
+    let permitSelections: any[] = [];
+    if(!(req.session as any).dataRetrieved){
+        permitSelections = await selectRequiredReportsRegistrationNumberORCL((req.session as any).regNum);
+        (req.session as any).permitSelections = permitSelections;
+        (req.session as any).dataRetrieved = true;
+    }else{
+        permitSelections = (req.session as any).permitSelections
+    }
 
-    const gather = voiceResponse.gather({
-        action: '/ivr/gather-permit-month-selection',
-        finishOnKey: '#',
-        method: 'POST',
-        actionOnEmptyResult: true,
-    });
+    if(permitSelections.length === 0){
+        return endTextEndCall();
+    }else{
+        const gather = voiceResponse.gather({
+            action: '/ivr/gather-permit-month-selection',
+            finishOnKey: '#',
+            method: 'POST',
+            actionOnEmptyResult: true,
+        });
 
-    gather.say(
-        { ...defaultVoiceAttributes },
-        `You have ${permitSelections.length} permits that require reporting. ` +
-        permitSelections.map((p, index) => `Press ${index+1} followed by the pound key to report on permit ${talkablePermitNum(p.permitNum)} `)
-    );
-    gather.pause();
-    gather.pause();
+        gather.say(
+            { ...defaultVoiceAttributes },
+            `You have ${permitSelections.length} permits that require reporting. ` +
+            permitSelections.map((p, index) => `Press ${index+1} followed by the pound key to report on permit ${talkablePermitNum(p.permitNum)} `)
+        );
+        gather.pause();
+        gather.pause();
 
-    return voiceResponse.toString();
+        return voiceResponse.toString();
+    }
 };
 
 export const gatherPermitMonthSelection = async (req: Request) => {
@@ -132,13 +142,12 @@ export const gatherPermitMonthSelection = async (req: Request) => {
     const permitSelections = (req.session as any).permitSelections as IPermit[];
     if (digits && digits > 0 && digits <= permitSelections.length) {
         permitSelection = permitSelections[digits-1];
+        (req.session as any).permit = permitSelection;
     }else{
         permitSelection = (req.session as any).permit;
     }
 
     if (permitSelection) {
-        (req.session as any).permit = permitSelection;
-
         const voiceResponse = new VoiceResponse();
         const monthSelections: IMonthReport[] = permitSelection.data;
         (req.session as any).permitMonthSelections = monthSelections;
@@ -159,6 +168,7 @@ export const gatherPermitMonthSelection = async (req: Request) => {
 
             return voiceResponse.toString();
         } else {
+            (req.session as any).permitSelections = (req.session as any).permitSelections.filter((p: IPermit) => p.permitId !== permitSelection!.permitId)
             return redirectPermitSelection(
                 `You have no months that require reporting on permit ${talkablePermitNum(permitSelection.permitNum)}`
             );
@@ -250,7 +260,9 @@ export const handleConfirmZeroRemainingData = async (req: Request) => {
         });
 
         await Promise.all(x);
-        return redirectGatherPermitMonthSelection('Entry saved');
+        
+        (req.session as any).permitSelections = (req.session as any).permitSelections.filter((p: IPermit) => p.permitId !== (req.session as any).permit.permitId)
+        return redirectPermitSelection('Entry saved');
     } else {
         return redirectGatherPermitMonthSelection();
     }
@@ -356,6 +368,7 @@ export const handleConfirmPermitMonthData = async (req: Request) => {
 
         await x;
         // (req.session as any).permit = (req.session as any).permit.data.filter((d: IMonthReport) => d.month !== permitMonth.month);
+        (req.session as any).permit = {...(req.session as any).permit, data: (req.session as any).permit.data.filter((month: IMonthReport) => month.month !== permitMonth.month)};
         (req.session as any).permitMonth = undefined;
         return redirectGatherPermitMonthSelection('Entry saved');
     } else {
@@ -373,6 +386,23 @@ export const handleConfirmPermitMonthData = async (req: Request) => {
         return twiml.toString();
     }
 };
+
+export const handleNoMonthsLeftToReport  = async (req: Request) => {
+    console.log('--handleNoMonthsLeftToReport------------------------------------------------');
+    console.log(req.session);
+    console.log('------------------------------------------------------------------------------');
+
+    const twiml = new VoiceResponse();
+    twiml.say(defaultVoiceAttributes, 'Thank you for reporting. You will be invoiced for the outstanding stumpage. For questions about reporting the amount of timber harvested, contact the Forest Management Branch at 867-456-3999, toll free in Yukon 1-800-661-0408, extension 3 9 9 9. Collection of this information is authorized under the authority of section 22(1)(h) and 24(1)(i) of the Forest Resources Act and section 15(a) & (c)(i) of the Access to Information and Protection of Privacy Act and will be used to fulfill reporting obligations under the Forest Resources Act and Regulations.');
+    twiml.hangup();
+    return twiml.toString();
+}
+
+const endTextEndCall = () => {
+    const twiml = new VoiceResponse();
+    twiml.redirect('/ivr/handle-no-months-left-to-report');
+    return twiml.toString();
+}
 
 const redirectGatherPermitMonthSelection = (redirectMessage?: string) => {
     const twiml = new VoiceResponse();
