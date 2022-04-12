@@ -71,6 +71,7 @@ ivrRouter.post('/handle-confirm-permit-month-data', async (req: Request, res: Re
   res.send(await handleConfirmPermitMonthData(req));
 });
 
+// POST: /ivr/handle-no-months-left-to-report
 ivrRouter.post('/handle-no-months-left-to-report', async (req: Request, res: Response) => {
   res.send(await handleNoMonthsLeftToReport(req));
 });
