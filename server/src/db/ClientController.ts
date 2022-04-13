@@ -290,15 +290,20 @@ export const getValidCodeORCL = async (email: string) => {
 export const getValidReportsORCL = async (corporateRegistrationNumber: number) => {
   let connection: any;
   try {
+    const start = new Date().getTime();
+    console.log('GETTING ORACLE CONNECTION ', new Date());
     connection = await oracledb.getConnection({
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
       connectString: process.env.DB_CONNECT,
     });
+    console.log('GOT CONNECTION, QUERY FUNCTION ', corporateRegistrationNumber, new Date());
     const result = await connection.execute(`begin :p3 := fmb.app_sec_pkg.valid_user(:p1);end;`, {
       p1: corporateRegistrationNumber,
       p3: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
     });
+    console.log('DONE QUERY ', result.outBinds.p3, new Date());
+    console.log('ELAPSED ', new Date().getTime() - start);
     return result.outBinds.p3;
   } catch (error) {
     console.error(error);
@@ -313,8 +318,6 @@ export const getValidReportsORCL = async (corporateRegistrationNumber: number) =
     }
   }
 };
-
-
 
 export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number) => {
   let connection: any;
@@ -334,29 +337,29 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
     };
     const result = await connection.execute(sql, binds, options);
 
-    const innerSQL = 'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 order by  TEN_PERMIT_SCHEDULE_ID';
+    const innerSQL =
+      'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 order by  TEN_PERMIT_SCHEDULE_ID';
     let binds2 = [result.rows[0].TEN_APPL_COMMERCIAL_ID];
     const retInner = await connection.execute(innerSQL, binds2, options);
 
-
     let uniquePermitIds: string[] = [];
     retInner.rows.forEach((r: any) => {
-      if(!uniquePermitIds.includes(r.TEN_CUTTING_PERMIT_ID)){
-        uniquePermitIds = uniquePermitIds.concat(r.TEN_CUTTING_PERMIT_ID)
+      if (!uniquePermitIds.includes(r.TEN_CUTTING_PERMIT_ID)) {
+        uniquePermitIds = uniquePermitIds.concat(r.TEN_CUTTING_PERMIT_ID);
       }
-    })
+    });
 
     const y = uniquePermitIds.map((permitId: string) => {
-      const filteredRows = retInner.rows.filter((r: any) => r.TEN_CUTTING_PERMIT_ID === permitId)
+      const filteredRows = retInner.rows.filter((r: any) => r.TEN_CUTTING_PERMIT_ID === permitId);
       let months: string[] = [];
       filteredRows.forEach((r: any) => {
-        if(!months.includes(r.PERIOD)){
+        if (!months.includes(r.PERIOD)) {
           months = months.concat(r.PERIOD);
         }
-      })
+      });
 
-      const data = months.map((month : string) => {
-        const monthfilteredRows = filteredRows.filter((r: any) => r.PERIOD === month)
+      const data = months.map((month: string) => {
+        const monthfilteredRows = filteredRows.filter((r: any) => r.PERIOD === month);
 
         const innerData = monthfilteredRows.map((g: any) => {
           return {
@@ -372,8 +375,8 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
           };
         });
 
-        return {month: month, data: innerData} as IMonthReport;
-      })
+        return { month: month, data: innerData } as IMonthReport;
+      });
 
       const z = {
         permitId: permitId,
@@ -381,7 +384,7 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
         data: data,
       };
       return z as IPermit;
-    })
+    });
     return y;
   } catch (error) {
     console.log(error);
