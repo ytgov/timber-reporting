@@ -207,6 +207,71 @@ export const selectPastReportsORCL = async (clientNum: number) => {
   }
 };
 
+export const insertMultiplePermitReportMonthDataORCL = async (
+  dataArray: IData[],
+  clientNum: number,
+  source: string
+) => {
+  let connection: any;
+  try {
+    connection = await oracledb.getConnection({
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      connectString: process.env.DB_CONNECT,
+    });
+    let sql =
+      'MERGE into FMB.TEN_PERMIT_SCHED_PROD_STAGE t1 ' +
+      'using (SELECT :1 a,:2 b, :3 c , :4 d, :5 e, :6 f from dual) t2 ' +
+      'on (t1.TEN_PERMIT_SCHED_PROD_ID = t2.a) ' +
+      'when matched then ' +
+      '  UPDATE set t1.VOLUME = t2.b, t1.TEN_PERMIT_PRODUCT_ID = t2.c, t1.TEN_PERMIT_SCHEDULE_ID = t2.d, t1.REC_LAST_MOD_DATE=sysdate, ' +
+      "             t1.STATUS = 'PENDING', t1.REC_LAST_MOD_USER=:5, t1.SOURCE = t2.f " +
+      'when not matched then ' +
+      '  INSERT (TEN_PERMIT_SCHED_PROD_ID, VOLUME, STATUS, REC_CREATE_DATE, REC_CREATE_USER, TEN_PERMIT_PRODUCT_ID,TEN_PERMIT_SCHEDULE_ID,SOURCE) ' +
+      "               values(:1,:2,'PENDING', sysdate, :5,:3,:4,:6)";
+
+    for (const data of dataArray) {
+      console.log(data);
+      let binds = [
+        data.permitReportId,
+        data.quantity.toString(),
+        data.permitProductId,
+        data.permitScheduleId,
+        clientNum,
+        source,
+      ];
+      console.log(binds);
+      let options = {
+        //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
+        //resultSet: true
+        // extendedMetaData: true,               // get extra metadata
+        // prefetchRows:     100,                // internal buffer allocation size for tuning
+        //fetchArraySize:   100,               // internal buffer allocation size for tuning
+        // maxRows:          200,
+        // autocommit:          true
+      };
+
+      await connection.execute(sql, binds, options);
+      console.log('EXECUTE');
+      await connection.commit();
+      console.log('DONE');
+    }
+    console.log('DONE ALL');
+    return 1;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+};
+
 export const insertPermitReportMonthDataORCL = async (data: any, clientNum: number, source: string) => {
   let connection: any;
   try {
@@ -234,6 +299,7 @@ export const insertPermitReportMonthDataORCL = async (data: any, clientNum: numb
       clientNum,
       source,
     ];
+    console.log(binds);
     let options = {
       //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
       //resultSet: true
