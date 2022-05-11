@@ -358,20 +358,15 @@ export const getValidCodeORCL = async (email: string) => {
 export const getValidReportsORCL = async (corporateRegistrationNumber: number) => {
   let connection: any;
   try {
-    const start = new Date().getTime();
-    console.log('GETTING ORACLE CONNECTION ', new Date());
     connection = await oracledb.getConnection({
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
       connectString: process.env.DB_CONNECT,
     });
-    console.log('GOT CONNECTION, QUERY FUNCTION ', corporateRegistrationNumber, new Date());
     const result = await connection.execute(`begin :p3 := fmb.app_sec_pkg.valid_user(:p1);end;`, {
       p1: corporateRegistrationNumber,
       p3: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
     });
-    console.log('DONE QUERY ', result.outBinds.p3, new Date());
-    console.log('ELAPSED ', new Date().getTime() - start);
     return result.outBinds.p3;
   } catch (error) {
     console.error(error);
