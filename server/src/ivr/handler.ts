@@ -167,7 +167,7 @@ export const gatherPermitMonthSelection = async (req: Request) => {
 
       gather.say(
         { ...defaultVoiceAttributes },
-        `You have ${monthSelections.length} months that require reporting. Please select option followed by the pound key. You can press 9 9 to report 0 for all outstanding months. ` +
+        `You have ${monthSelections.length} months that require reporting with ${permitSelection.amountRemaining} remaining. Please select option followed by the pound key. You can press 9 9 to report 0 for all outstanding months. ` +
           monthSelections.map((p, index) => `Press ${index + 1} to report on ${p.month} `)
       );
 
