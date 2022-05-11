@@ -3,6 +3,7 @@ import oracledb from 'oracledb';
 export interface IPermit {
   permitId: string;
   permitNum: string;
+  amountRemaining: string;
   data: IMonthReport[];
 }
 
@@ -16,6 +17,7 @@ export interface IMonthReportData {
   reportedDate: string;
   rate: string;
   productType: string;
+  amountRemaining: number;
   month: string;
   quantity: string;
   permitReportId: string;
@@ -431,7 +433,8 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
           return {
             permitNum: g.PERMIT_NUMBER,
             rate: g.RATE,
-            productType: g.PRODUCT + ' ' + g.TIMBER_TYPE + ' with ' + g.REMAINING_VOLUME + ' m\u00B3 remaining',
+            productType: g.PRODUCT + ' ' + g.TIMBER_TYPE,
+            amountRemaining: g.REMAINING_VOLUME,
             month: g.PERIOD,
             quantity: g.VOLUME,
             permitReportId: g.TEN_PERMIT_SCHED_PROD_ID,
@@ -444,9 +447,13 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
         return { month: month, data: innerData } as IMonthReport;
       });
 
+      let totalAmountRemaining = 0;
+      data.forEach(d => {d.data.map(month => {totalAmountRemaining = totalAmountRemaining +  month.amountRemaining})})
+
       const z = {
         permitId: permitId,
         permitNum: filteredRows[0].PERMIT_NUMBER,
+        amountRemaining: totalAmountRemaining.toString() + ' m\u00B3',
         data: data,
       };
       return z as IPermit;
