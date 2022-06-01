@@ -102,17 +102,23 @@ export const gatherPermitSelection = async (req: Request) => {
   console.log('------------------------------------------------------------------------------');
   const voiceResponse = new VoiceResponse();
 
+  let originalPermits = false;
   let permitSelections: any[] = [];
   if (!(req.session as any).dataRetrieved) {
     permitSelections = await selectRequiredReportsRegistrationNumberORCL((req.session as any).regNum);
     (req.session as any).permitSelections = permitSelections;
     (req.session as any).dataRetrieved = true;
+    originalPermits = true;
   } else {
     permitSelections = (req.session as any).permitSelections;
   }
 
   if (permitSelections.length === 0) {
-    return endTextEndCall();
+    if(originalPermits){
+      return noPermitsEndCall(req);
+    }else{
+      return endTextEndCall();
+    }
   } else {
     const gather = voiceResponse.gather({
       action: '/ivr/gather-permit-month-selection',
@@ -410,6 +416,20 @@ export const handleNoMonthsLeftToReport = async (req: Request) => {
   twiml.say(
     defaultVoiceAttributes,
     'Thank you for reporting. You will be invoiced for the outstanding stumpage. For questions about reporting the amount of timber harvested, contact the Forest Management Branch at 867-456-3999, toll free in Yukon 1-800-661-0408, extension 3 9 9 9. Collection of this information is authorized under the authority of section 22(1)(h) and 24(1)(i) of the Forest Resources Act and section 15(a) & (c)(i) of the Access to Information and Protection of Privacy Act and will be used to fulfill reporting obligations under the Forest Resources Act and Regulations.'
+  );
+  twiml.hangup();
+  return twiml.toString();
+};
+
+export const noPermitsEndCall = async (req: Request) => {
+  console.log('--noPermitsEndCall------------------------------------------------');
+  console.log(req.session);
+  console.log('------------------------------------------------------------------------------');
+
+  const twiml = new VoiceResponse();
+  twiml.say(
+      defaultVoiceAttributes,
+      'No reporting is required. Goodbye.'
   );
   twiml.hangup();
   return twiml.toString();
