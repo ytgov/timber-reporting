@@ -218,18 +218,19 @@ export const MainPage: React.FC = () => {
                           {!mobile && (
                             <tr>
                               <th style={{ borderBottomWidth: 1 }}>Month</th>
-                              {requiredReports
-                                .filter((f) => e === f.permitId)[0]
-                                .data.map((f, i) => (
-                                  <th style={{ borderBottomWidth: 1 }} key={`rr_${i}`}>
-                                    {f.productType}
-                                  </th>
-                                ))}
+                                  {requiredReports
+                                  .filter((f) => e === f.permitId)[0]
+                                  .data.map((f, i) => (
+                                      <th style={{ borderBottomWidth: 1 }} key={`rr_${i}`}>
+                                        {f.productType}
+                                      </th>
+                                  )).sort()}
                               <th style={{ textAlign: 'right', borderBottomWidth: 1 }}>Stumpage due</th>
                             </tr>
                           )}
                         </thead>
                         <tbody>
+
                           {requiredReports
                             .filter((f) => e === f.permitId)
                             .map((res: IRequiredReport, index) => {
@@ -248,11 +249,13 @@ export const MainPage: React.FC = () => {
                                                   style={{ textAlign: 'right' }}
                                                   value={g.quantity || ''}
                                                   type={'number'}
+                                                  step={'.01'}
                                                   readOnly={res.processed}
                                                   invalid={permitDisplayError === e && !g.quantity}
                                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                     const value = e.target.value;
                                                     setRequiredReports((a: IRequiredReport[]) => {
+                                                      //pindex is index of g.permitReportId
                                                       const pIndex = a.findIndex((b) =>
                                                         b.data.find((c) => c.permitReportId === g.permitReportId)
                                                       );
@@ -260,11 +263,12 @@ export const MainPage: React.FC = () => {
                                                         (c) => c.permitReportId === g.permitReportId
                                                       );
                                                       return [
+                                                          //get data from beginning of a up to pIndex
                                                         ...a.slice(0, pIndex),
                                                         {
-                                                          ...a[pIndex],
-                                                          data: [
-                                                            ...a[pIndex].data.slice(0, dataIndex),
+                                                          ...a[pIndex],//get the old value at pIndex
+                                                          data: [//update with new value
+                                                            ...a[pIndex].data.slice(0, dataIndex),//dataIndex is product
                                                             {
                                                               ...a[pIndex].data[dataIndex],
                                                               quantity: value,
@@ -312,22 +316,27 @@ export const MainPage: React.FC = () => {
                                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 var valueChar = e.target.value;
                                                 var value = 0;
-
+                                                var lastChar = valueChar.charAt(valueChar.length-1);
+                                           //     console.log('volume changed, lastChar '+lastChar);
                                                 if (!valueChar) {
                                                   value = 0;
                                                 } else {
-                                                  value = parseFloat(valueChar);
-                                                  if (!value || isNaN(value)) {
-                                                    value = 0;
+                                                  if (lastChar !== '.') {
+                                                    value = parseFloat(valueChar);
+                                                    if (!value || isNaN(value)) {
+                                                      value = 0;
+                                                    }
                                                   }
                                                 }
-                                                valueChar = value + '';
+                                            //    console.log('valueChar is now '+valueChar+' while value is '+ value);
+
+                                             //   valueChar = value + '';
                                                 setRequiredReports((a: IRequiredReport[]) => {
-                                                  const pIndex = a.findIndex((b) =>
+                                                  const pIndex = a.findIndex((b) =>//month row
                                                     b.data.find((c) => c.permitReportId === g.permitReportId)
                                                   );
                                                   const dataIndex = a[pIndex].data.findIndex(
-                                                    (c) => c.permitReportId === g.permitReportId
+                                                    (c) => c.permitReportId === g.permitReportId //prdouct column
                                                   );
                                                   return [
                                                     ...a.slice(0, pIndex),

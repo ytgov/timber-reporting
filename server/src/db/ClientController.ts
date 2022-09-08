@@ -96,7 +96,7 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
     const result = await connection.execute(sql, binds, options);
     const x = result.rows.map(async (e: any, i: number) => {
       const innerSQL =
-        'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3';
+        'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3 order by ten_permit_product_id';
       let binds = [e.TEN_APPL_COMMERCIAL_ID, e.TEN_PERMIT_SCHEDULE_ID, clientNum];
 
       const retInner = await connection.execute(innerSQL, binds, options);
@@ -104,7 +104,7 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
       const data = retInner.rows.map((f: any) => {
         return {
           rate: f.RATE,
-          productType: f.PRODUCT + ' ' + f.TIMBER_TYPE + ' ' + f.REMAINING_VOLUME + ' m\u00B3 remaining',
+          productType: f.PRODUCT + ' ' + f.TIMBER_TYPE + ' ' + f.REMAINING_VOLUME_CHR + ' m\u00B3 remaining',
           // quantity: f.VOLUME || 0,
           quantity: f.VOLUME,
           permitReportId: f.TEN_PERMIT_SCHED_PROD_ID,
@@ -162,7 +162,7 @@ export const selectPastReportsORCL = async (clientNum: number) => {
     const result = await connection.execute(sql, binds, options);
     const x = result.rows.map(async (e: any, i: number) => {
       const innerSQL =
-        'SELECT * from fmb.harvest_reports_submitted_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3';
+        'SELECT * from fmb.harvest_reports_submitted_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3 order by ten_permit_product_id';
       let binds = [e.TEN_APPL_COMMERCIAL_ID, e.TEN_PERMIT_SCHEDULE_ID, clientNum];
 
       const retInner = await connection.execute(innerSQL, binds, options);
@@ -231,7 +231,7 @@ export const insertMultiplePermitReportMonthDataORCL = async (
       "               values(:1,:2,'PENDING', sysdate, :5,:3,:4,:6)";
 
     for (const data of dataArray) {
-      console.log(data);
+    //  console.log(data);
       let binds = [
         data.permitReportId,
         data.quantity.toString(),
@@ -240,7 +240,7 @@ export const insertMultiplePermitReportMonthDataORCL = async (
         clientNum,
         source,
       ];
-      console.log(binds);
+    //  console.log(binds);
       let options = {
         //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
         //resultSet: true
@@ -252,11 +252,11 @@ export const insertMultiplePermitReportMonthDataORCL = async (
       };
 
       await connection.execute(sql, binds, options);
-      console.log('EXECUTE');
+    //  console.log('EXECUTE');
       await connection.commit();
-      console.log('DONE');
+     // console.log('DONE');
     }
-    console.log('DONE ALL');
+   // console.log('DONE ALL');
     return 1;
   } catch (error) {
     console.error(error);
@@ -299,7 +299,7 @@ export const insertPermitReportMonthDataORCL = async (data: any, clientNum: numb
       clientNum,
       source,
     ];
-    console.log(binds);
+  //  console.log(binds);
     let options = {
       //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
       //resultSet: true
