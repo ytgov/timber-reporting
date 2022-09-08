@@ -207,6 +207,71 @@ export const selectPastReportsORCL = async (clientNum: number) => {
   }
 };
 
+export const insertMultiplePermitReportMonthDataORCL = async (
+  dataArray: IData[],
+  clientNum: number,
+  source: string
+) => {
+  let connection: any;
+  try {
+    connection = await oracledb.getConnection({
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      connectString: process.env.DB_CONNECT,
+    });
+    let sql =
+      'MERGE into FMB.TEN_PERMIT_SCHED_PROD_STAGE t1 ' +
+      'using (SELECT :1 a,:2 b, :3 c , :4 d, :5 e, :6 f from dual) t2 ' +
+      'on (t1.TEN_PERMIT_SCHED_PROD_ID = t2.a) ' +
+      'when matched then ' +
+      '  UPDATE set t1.VOLUME = t2.b, t1.TEN_PERMIT_PRODUCT_ID = t2.c, t1.TEN_PERMIT_SCHEDULE_ID = t2.d, t1.REC_LAST_MOD_DATE=sysdate, ' +
+      "             t1.STATUS = 'PENDING', t1.REC_LAST_MOD_USER=:5, t1.SOURCE = t2.f " +
+      'when not matched then ' +
+      '  INSERT (TEN_PERMIT_SCHED_PROD_ID, VOLUME, STATUS, REC_CREATE_DATE, REC_CREATE_USER, TEN_PERMIT_PRODUCT_ID,TEN_PERMIT_SCHEDULE_ID,SOURCE) ' +
+      "               values(:1,:2,'PENDING', sysdate, :5,:3,:4,:6)";
+
+    for (const data of dataArray) {
+      console.log(data);
+      let binds = [
+        data.permitReportId,
+        data.quantity.toString(),
+        data.permitProductId,
+        data.permitScheduleId,
+        clientNum,
+        source,
+      ];
+      console.log(binds);
+      let options = {
+        //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
+        //resultSet: true
+        // extendedMetaData: true,               // get extra metadata
+        // prefetchRows:     100,                // internal buffer allocation size for tuning
+        //fetchArraySize:   100,               // internal buffer allocation size for tuning
+        // maxRows:          200,
+        // autocommit:          true
+      };
+
+      await connection.execute(sql, binds, options);
+      console.log('EXECUTE');
+      await connection.commit();
+      console.log('DONE');
+    }
+    console.log('DONE ALL');
+    return 1;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+};
+
 export const insertPermitReportMonthDataORCL = async (data: any, clientNum: number, source: string) => {
   let connection: any;
   try {
@@ -234,6 +299,7 @@ export const insertPermitReportMonthDataORCL = async (data: any, clientNum: numb
       clientNum,
       source,
     ];
+    console.log(binds);
     let options = {
       //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
       //resultSet: true
@@ -314,8 +380,6 @@ export const getValidReportsORCL = async (corporateRegistrationNumber: number) =
   }
 };
 
-
-
 export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number) => {
   let connection: any;
   try {
@@ -334,35 +398,35 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
     };
     const result = await connection.execute(sql, binds, options);
 
-    const innerSQL = 'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 order by  TEN_PERMIT_SCHEDULE_ID';
+    const innerSQL =
+      'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 order by  TEN_PERMIT_SCHEDULE_ID';
     let binds2 = [result.rows[0].TEN_APPL_COMMERCIAL_ID];
     const retInner = await connection.execute(innerSQL, binds2, options);
 
-
     let uniquePermitIds: string[] = [];
     retInner.rows.forEach((r: any) => {
-      if(!uniquePermitIds.includes(r.TEN_CUTTING_PERMIT_ID)){
-        uniquePermitIds = uniquePermitIds.concat(r.TEN_CUTTING_PERMIT_ID)
+      if (!uniquePermitIds.includes(r.TEN_CUTTING_PERMIT_ID)) {
+        uniquePermitIds = uniquePermitIds.concat(r.TEN_CUTTING_PERMIT_ID);
       }
-    })
+    });
 
     const y = uniquePermitIds.map((permitId: string) => {
-      const filteredRows = retInner.rows.filter((r: any) => r.TEN_CUTTING_PERMIT_ID === permitId)
+      const filteredRows = retInner.rows.filter((r: any) => r.TEN_CUTTING_PERMIT_ID === permitId);
       let months: string[] = [];
       filteredRows.forEach((r: any) => {
-        if(!months.includes(r.PERIOD)){
+        if (!months.includes(r.PERIOD)) {
           months = months.concat(r.PERIOD);
         }
-      })
+      });
 
-      const data = months.map((month : string) => {
-        const monthfilteredRows = filteredRows.filter((r: any) => r.PERIOD === month)
+      const data = months.map((month: string) => {
+        const monthfilteredRows = filteredRows.filter((r: any) => r.PERIOD === month);
 
         const innerData = monthfilteredRows.map((g: any) => {
           return {
             permitNum: g.PERMIT_NUMBER,
             rate: g.RATE,
-            productType: g.PRODUCT + ' ' + g.TIMBER_TYPE + ' with ' + g.REMAINING_VOLUME + ' m\u00B3 remaining',
+            productType: g.PRODUCT + ' ' + g.TIMBER_TYPE,
             month: g.PERIOD,
             quantity: g.VOLUME,
             permitReportId: g.TEN_PERMIT_SCHED_PROD_ID,
@@ -372,8 +436,8 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
           };
         });
 
-        return {month: month, data: innerData} as IMonthReport;
-      })
+        return { month: month, data: innerData } as IMonthReport;
+      });
 
       const z = {
         permitId: permitId,
@@ -381,7 +445,7 @@ export const selectRequiredReportsRegistrationNumberORCL = async (regNum: number
         data: data,
       };
       return z as IPermit;
-    })
+    });
     return y;
   } catch (error) {
     console.log(error);

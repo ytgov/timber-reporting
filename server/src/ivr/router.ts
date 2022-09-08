@@ -5,7 +5,7 @@ import {
   gatherPermitMonthSelection,
   gatherPermitSelection,
   handleConfirmPermitMonthData,
-  handleConfirmZeroRemainingData,
+  handleConfirmZeroRemainingData, handleNoMonthsLeftToReport,
   handlePermitMonthData,
   handlePermitMonthSelection,
   validateCRN,
@@ -56,6 +56,7 @@ ivrRouter.post('/handle-permit-month-selection', async (req: Request, res: Respo
   res.send(await handlePermitMonthSelection(req));
 });
 
+// POST: /ivr/handle-confirm-zero-remaining-data
 ivrRouter.post('/handle-confirm-zero-remaining-data', async (req: Request, res: Response) => {
   res.send(await handleConfirmZeroRemainingData(req));
 });
@@ -65,8 +66,14 @@ ivrRouter.post('/gather-confirm-permit-month-data', async (req: Request, res: Re
   res.send(await gatherConfirmPermitMonthData(req));
 });
 
+// POST: /ivr/handle-confirm-permit-month-data
 ivrRouter.post('/handle-confirm-permit-month-data', async (req: Request, res: Response) => {
   res.send(await handleConfirmPermitMonthData(req));
+});
+
+// POST: /ivr/handle-no-months-left-to-report
+ivrRouter.post('/handle-no-months-left-to-report', async (req: Request, res: Response) => {
+  res.send(await handleNoMonthsLeftToReport(req));
 });
 
 export { ivrRouter };
