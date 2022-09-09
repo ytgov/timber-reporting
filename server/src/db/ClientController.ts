@@ -153,8 +153,7 @@ export const selectPastReportsORCL = async (clientNum: number) => {
 
     let sql =
       'SELECT distinct TEN_APPL_COMMERCIAL_ID, TEN_PERMIT_SCHEDULE_ID from fmb.harvest_reports_submitted_vw where ten_applicant_id = :1 order by  TEN_PERMIT_SCHEDULE_ID';
-    //let binds = [clientNum];
-    let binds = [163];
+    let binds = [clientNum];
     let options = {
       outFormat: oracledb.OUT_FORMAT_OBJECT, // query result format
       fetchArraySize: 100, // internal buffer allocation size for tuning
@@ -163,7 +162,7 @@ export const selectPastReportsORCL = async (clientNum: number) => {
     const result = await connection.execute(sql, binds, options);
     const x = result.rows.map(async (e: any, i: number) => {
       const innerSQL =
-        'SELECT * from fmb.harvest_reports_submitted_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3 order by ten_permit_product_id]';
+        'SELECT * from fmb.harvest_reports_submitted_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3 order by ten_permit_product_id';
       let binds = [e.TEN_APPL_COMMERCIAL_ID, e.TEN_PERMIT_SCHEDULE_ID, clientNum];
 
       const retInner = await connection.execute(innerSQL, binds, options);
