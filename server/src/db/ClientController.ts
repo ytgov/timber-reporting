@@ -153,7 +153,8 @@ export const selectPastReportsORCL = async (clientNum: number) => {
 
     let sql =
       'SELECT distinct TEN_APPL_COMMERCIAL_ID, TEN_PERMIT_SCHEDULE_ID from fmb.harvest_reports_submitted_vw where ten_applicant_id = :1 order by  TEN_PERMIT_SCHEDULE_ID';
-    let binds = [clientNum];
+    //let binds = [clientNum];
+    let binds = [163];
     let options = {
       outFormat: oracledb.OUT_FORMAT_OBJECT, // query result format
       fetchArraySize: 100, // internal buffer allocation size for tuning
