@@ -96,7 +96,7 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
     const result = await connection.execute(sql, binds, options);
     const x = result.rows.map(async (e: any, i: number) => {
       const innerSQL =
-        'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3';
+        'SELECT * from fmb.harvest_reports_due_vw where ten_appl_commercial_id = :1 and ten_permit_schedule_id = :2 and ten_applicant_id = :3 order by ten_permit_product_id';
       let binds = [e.TEN_APPL_COMMERCIAL_ID, e.TEN_PERMIT_SCHEDULE_ID, clientNum];
 
       const retInner = await connection.execute(innerSQL, binds, options);

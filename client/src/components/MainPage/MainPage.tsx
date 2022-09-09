@@ -216,17 +216,17 @@ export const MainPage: React.FC = () => {
                             </th>
                           </tr>
                           {!mobile && (
-
                             <tr>
                               <th style={{ borderBottomWidth: 1 }}>Month</th>
-                              {requiredReports
-                                .filter((f) => e === f.permitId)[0]
+                                  {requiredReports
+                                  .filter((f) => e === f.permitId)[0]
                                   //todo sort by product type here
-                                .data.map((f, i) => (
-                                  <th style={{ borderBottomWidth: 1 }} key={`rr_${i}`}>
-                                    {f.productType}
-                                  </th>
-                                ))}
+                                  //const productTypeMap = new Map(x.map(e=>([e.permitId,e.data.map(f=>f.productType).sort((a,b)=> (a.localeCompare(b)))])));
+                                  .data.map((f, i) => (
+                                      <th style={{ borderBottomWidth: 1 }} key={`rr_${i}`}>
+                                        {f.productType}
+                                      </th>
+                                  ))}
                               <th style={{ textAlign: 'right', borderBottomWidth: 1 }}>Stumpage due</th>
                             </tr>
                           )}
@@ -302,7 +302,6 @@ export const MainPage: React.FC = () => {
                                   {!mobile && (
                                     <tr key={`non-mobile-tr-${index}`}>
                                       <td>{res.month}</td>
-                                      //todo fix rendering here, sort map and header above by product type, see 221
                                       {res.data.map((g, i) => (
                                         <td key={`non-mobile-tr-${index}-td-${i}`}>
                                           <InputGroup>
