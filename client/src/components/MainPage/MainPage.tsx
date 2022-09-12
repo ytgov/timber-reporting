@@ -220,18 +220,17 @@ export const MainPage: React.FC = () => {
                               <th style={{ borderBottomWidth: 1 }}>Month</th>
                                   {requiredReports
                                   .filter((f) => e === f.permitId)[0]
-                                  //todo sort by product type here
-                                  //const productTypeMap = new Map(x.map(e=>([e.permitId,e.data.map(f=>f.productType).sort((a,b)=> (a.localeCompare(b)))])));
                                   .data.map((f, i) => (
                                       <th style={{ borderBottomWidth: 1 }} key={`rr_${i}`}>
                                         {f.productType}
                                       </th>
-                                  ))}
+                                  )).sort()}
                               <th style={{ textAlign: 'right', borderBottomWidth: 1 }}>Stumpage due</th>
                             </tr>
                           )}
                         </thead>
                         <tbody>
+
                           {requiredReports
                             .filter((f) => e === f.permitId)
                             .map((res: IRequiredReport, index) => {
@@ -250,6 +249,7 @@ export const MainPage: React.FC = () => {
                                                   style={{ textAlign: 'right' }}
                                                   value={g.quantity || ''}
                                                   type={'number'}
+                                                  step={'.01'}
                                                   readOnly={res.processed}
                                                   invalid={permitDisplayError === e && !g.quantity}
                                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -316,16 +316,21 @@ export const MainPage: React.FC = () => {
                                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 var valueChar = e.target.value;
                                                 var value = 0;
-
+                                                var lastChar = valueChar.charAt(valueChar.length-1);
+                                           //     console.log('volume changed, lastChar '+lastChar);
                                                 if (!valueChar) {
                                                   value = 0;
                                                 } else {
-                                                  value = parseFloat(valueChar);
-                                                  if (!value || isNaN(value)) {
-                                                    value = 0;
+                                                  if (lastChar !== '.') {
+                                                    value = parseFloat(valueChar);
+                                                    if (!value || isNaN(value)) {
+                                                      value = 0;
+                                                    }
                                                   }
                                                 }
-                                                valueChar = value + '';
+                                            //    console.log('valueChar is now '+valueChar+' while value is '+ value);
+
+                                             //   valueChar = value + '';
                                                 setRequiredReports((a: IRequiredReport[]) => {
                                                   const pIndex = a.findIndex((b) =>//month row
                                                     b.data.find((c) => c.permitReportId === g.permitReportId)
