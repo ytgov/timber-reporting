@@ -21,18 +21,14 @@ export const PreviousReports: React.FC = () => {
     authAxios
       .get(`api/permits/previous-reports/`)
       .then((response: any) => {
-          console.log('ready to setPreviousReports ');
         if (response.data) {
-            console.log('setPreviousReports done');
           setPreviousReports(response.data);
-        } else {
-            console.log('setPreviousReports NOT done');
         }
       })
       .catch((error) => {
         const caughtErrorMessage = error.response && error.response.data && error.response.data.userMessage;
         if (caughtErrorMessage) {
-          console.log('An error happened');
+          console.log('An error happened: ' + caughtErrorMessage);
         }
       });
   }, []);
@@ -45,7 +41,6 @@ const uniquePermitIDs = previousReports
 
 const x = uniquePermitIDs.flatMap(e=>previousReports.find(p=>p.permitId===e) || []);
 const productTypeMap = new Map(x.map(e=>([e.permitId,e.data.map(f=>f.productType).sort((a,b)=> (a.localeCompare(b)))])));
-    console.log('previousReports.length '+ previousReports.length);
   return (
     <div className={'d-flex'} style={{ flexDirection: 'column', height: '100%' }}>
       <div className={'user-details-container flex-grow-1'}>

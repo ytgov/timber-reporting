@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
-//import cors from 'cors';
 const cors = require('cors');
 import { validateClientORCL } from './api/apiHandler';
 import { router } from './router';
@@ -19,6 +18,10 @@ const sessionTokenSecret = process.env.SESSION_SECRET;
 
 if (!jwtTokenSecret) {
   throw Error('JWT Token Required');
+}
+
+if (!sessionTokenSecret) {
+  throw Error('Session Secret Required in .env file');
 }
 
 export const checkToken = async (req: Request, res: Response) => {

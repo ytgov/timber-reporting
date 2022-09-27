@@ -307,8 +307,6 @@ export const MainPage: React.FC = () => {
                                           <InputGroup>
                                             <Input
                                               style={{ textAlign: 'right' }}
-                                              // value={g.quantity || '0' }
-
                                               value={g.quantity}
                                               type={'text'}
                                               readOnly={res.processed}
@@ -317,7 +315,6 @@ export const MainPage: React.FC = () => {
                                                 var valueChar = e.target.value;
                                                 var value = 0;
                                                 var lastChar = valueChar.charAt(valueChar.length-1);
-                                           //     console.log('volume changed, lastChar '+lastChar);
                                                 if (!valueChar) {
                                                   value = 0;
                                                 } else {
@@ -328,9 +325,6 @@ export const MainPage: React.FC = () => {
                                                     }
                                                   }
                                                 }
-                                            //    console.log('valueChar is now '+valueChar+' while value is '+ value);
-
-                                             //   valueChar = value + '';
                                                 setRequiredReports((a: IRequiredReport[]) => {
                                                   const pIndex = a.findIndex((b) =>//month row
                                                     b.data.find((c) => c.permitReportId === g.permitReportId)
@@ -456,7 +450,6 @@ export const MainPage: React.FC = () => {
                                       setErrorMessage('Missing harvest amount. You must enter a value for every month');
                                       setAttemptSubmit(e);
                                     } else {
-                                      //  if (!overHarvest(e)) {
                                       const x = await submitTimberHarvest(data);
                                       if (x === 1) {
                                         setSubmittedPermit(e);
@@ -474,12 +467,7 @@ export const MainPage: React.FC = () => {
                                           });
                                         });
                                       }
-                                      //    } else {
-                                      //    setPermitDisplayError(e);
-                                      //  setErrorMessage('Overharvest - Please contact forestry if further volume is required.');
-                                      //setAttemptSubmit(e);
-                                      //}
-                                    }
+                                     }
                                   }}
                                 >
                                   Submit report

@@ -18,8 +18,6 @@ export const checkToken = async () => {
 
       if (status === 502 || status === 503) {
         window.setTimeout(() => checkToken(), 1000);
-      } else {
-        //    console.error('JWT Error handler', error);
       }
       return 'KO';
     }

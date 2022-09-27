@@ -231,7 +231,6 @@ export const insertMultiplePermitReportMonthDataORCL = async (
       "               values(:1,:2,'PENDING', sysdate, :5,:3,:4,:6)";
 
     for (const data of dataArray) {
-    //  console.log(data);
       let binds = [
         data.permitReportId,
         data.quantity.toString(),
@@ -240,7 +239,6 @@ export const insertMultiplePermitReportMonthDataORCL = async (
         clientNum,
         source,
       ];
-    //  console.log(binds);
       let options = {
         //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
         //resultSet: true
@@ -252,11 +250,8 @@ export const insertMultiplePermitReportMonthDataORCL = async (
       };
 
       await connection.execute(sql, binds, options);
-    //  console.log('EXECUTE');
       await connection.commit();
-     // console.log('DONE');
     }
-   // console.log('DONE ALL');
     return 1;
   } catch (error) {
     console.error(error);
@@ -299,7 +294,6 @@ export const insertPermitReportMonthDataORCL = async (data: any, clientNum: numb
       clientNum,
       source,
     ];
-  //  console.log(binds);
     let options = {
       //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
       //resultSet: true
