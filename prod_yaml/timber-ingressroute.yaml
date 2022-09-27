@@ -44,9 +44,16 @@ spec:
         - name: timber-api-svc
           port: 3000
           weight: 10
+    - kind: Rule
+      #match requests to this domain
+      match: PathPrefix(`/ivr/`)
+      services:
+        - name: timber-api-svc
+          port: 3000
+          weight: 10
   tls:
     secretName: prod-timberreporting-tls-secret
     #domains:
-    #- main: report-timber-harvest.service.yukon.ca
-    #sans:
-    #- report-timber-harvest.service.yukon.ca
+            #- main: report-timber-harvest.service.yukon.ca
+      #sans:
+      #- report-timber-harvest.service.yukon.ca

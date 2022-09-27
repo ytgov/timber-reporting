@@ -294,6 +294,7 @@ export const insertPermitReportMonthDataORCL = async (data: any, clientNum: numb
       clientNum,
       source,
     ];
+  //  console.log(binds);
     let options = {
       //outFormat: oracledb.OUT_FORMAT_OBJECT,   // query result format
       //resultSet: true

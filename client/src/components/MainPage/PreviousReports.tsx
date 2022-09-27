@@ -21,8 +21,12 @@ export const PreviousReports: React.FC = () => {
     authAxios
       .get(`api/permits/previous-reports/`)
       .then((response: any) => {
+          console.log('ready to setPreviousReports ');
         if (response.data) {
+            console.log('setPreviousReports done');
           setPreviousReports(response.data);
+        } else {
+            console.log('setPreviousReports NOT done');
         }
       })
       .catch((error) => {

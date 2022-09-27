@@ -315,6 +315,7 @@ export const MainPage: React.FC = () => {
                                                 var valueChar = e.target.value;
                                                 var value = 0;
                                                 var lastChar = valueChar.charAt(valueChar.length-1);
+
                                                 if (!valueChar) {
                                                   value = 0;
                                                 } else {
