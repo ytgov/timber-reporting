@@ -6,7 +6,7 @@ pipeline {
 	API_NAME = "timber-api"
         VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
         IMAGE = "${NAME}:${VERSION}"
-        HARBOR_URL = "10.230.5.2"
+        HARBOR_URL = "10.230.7.2"
         HARBOR_PROJECT = "eserv-tst-ns"
     }
 
@@ -60,15 +60,15 @@ pipeline {
         stage('Deploy') {
 
             steps {
-                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.5.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod apply -f yaml/ -n timber-reporting --token=$tkc_session'
+                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.7.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod apply -f yaml/ -n timber-reporting --token=$tkc_session'
             }
         }
 
         stage('Refresh deployments') {
 
             steps {
-                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.5.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-client --token=$tkc_session'
-                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.5.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-api --token=$tkc_session'
+                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.7.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-client --token=$tkc_session'
+                sh 'tkc=$(curl -XPOST -u $USER_CREDENTIALS_USR@ynet.gov.yk.ca:$USER_CREDENTIALS_PSW https://10.230.7.1/wcp/login -k -d \'{"guest_cluster_name":"eserv-tst-cluster"}\' -H "Content-Type: application/json"); tkc_server=$(echo $tkc | jq -r .guest_cluster_server); tkc_session=$(echo $tkc | jq -r .session_id); kubectl config set-cluster $tkc_server --server=https://$tkc_server:6443 --insecure-skip-tls-verify=true; kubectl config set-context tkc-context-prod --cluster=$tkc_server; kubectl --context tkc-context-prod -n timber-reporting rollout restart deployment timber-api --token=$tkc_session'
             }
         }
 
@@ -85,7 +85,7 @@ pipeline {
 
         success {
             emailext (
-                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com',
+                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com,jobina.tamminga@makeit.com',
                 subject: '$DEFAULT_SUBJECT',
                 body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has succeeded',
                 mimeType: 'text/html'
@@ -94,13 +94,14 @@ pipeline {
         }
         failure {
             emailext (
-                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com',
+                to: 'ryan.sylvestre@makeit.com,grant.redfern@makeit.com,jobina.tamminga@makeit.com',
                 subject: '$DEFAULT_SUBJECT',
                 body: 'build number ${BUILD_NUMBER} with Git commit hash ${GIT_REVISION} has failed',
                 mimeType: 'text/html'
             );
             echo 'Build failed'
         }
+
     }
 
 }

@@ -74,6 +74,7 @@ pipeline {
         always {
             emailext (
                 to: 'alert-cd@yukon.ca',
+                replyTo: 'alert-cd@yukon.ca',
                 subject: '$DEFAULT_SUBJECT',
                 body: '$DEFAULT_CONTENT',
                 mimeType: 'text/html'

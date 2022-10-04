@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
-//import cors from 'cors';
 const cors = require('cors');
 import { validateClientORCL } from './api/apiHandler';
 import { router } from './router';
@@ -8,15 +7,21 @@ import { router } from './router';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { dbCheck } from './db/ClientController';
+import session from 'express-session';
 
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 dotenv.config();
 const jwtTokenSecret = process.env.JWT_TKN_SECRET;
+const sessionTokenSecret = process.env.SESSION_SECRET;
 
 if (!jwtTokenSecret) {
   throw Error('JWT Token Required');
+}
+
+if (!sessionTokenSecret) {
+  throw Error('Session Secret Required in .env file');
 }
 
 export const checkToken = async (req: Request, res: Response) => {
@@ -74,6 +79,8 @@ const getClientFromJWT = async (req: Request) => {
 };
 
 const app = express();
+
+app.use(session({secret: sessionTokenSecret ? sessionTokenSecret: 'todo-secret'}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

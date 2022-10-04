@@ -28,6 +28,7 @@ apiRouter.get('/permits/required-reports', async (req: Request, res: Response) =
 apiRouter.get('/permits/previous-reports', async (req: Request, res: Response) => {
   if (await checkToken(req, res)) {
     let clientNum = res.locals.clientNum;
+ //   console.log('previous-reports clientNum' + clientNum);
     if (clientNum > 0) {
       res.send(await getPreviousReportPermits(clientNum));
     } else {

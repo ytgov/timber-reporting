@@ -21,18 +21,30 @@ export const PreviousReports: React.FC = () => {
     authAxios
       .get(`api/permits/previous-reports/`)
       .then((response: any) => {
+          console.log('ready to setPreviousReports ');
         if (response.data) {
+            console.log('setPreviousReports done');
           setPreviousReports(response.data);
+        } else {
+            console.log('setPreviousReports NOT done');
         }
       })
       .catch((error) => {
         const caughtErrorMessage = error.response && error.response.data && error.response.data.userMessage;
         if (caughtErrorMessage) {
-          console.log('An error happened');
+          console.log('An error happened: ' + caughtErrorMessage);
         }
       });
   }, []);
 
+const uniquePermitIDs = previousReports
+    .map((e) => e.permitId)
+    .filter((value, index, self) => {
+        return self.indexOf(value) === index;
+    });
+
+const x = uniquePermitIDs.flatMap(e=>previousReports.find(p=>p.permitId===e) || []);
+const productTypeMap = new Map(x.map(e=>([e.permitId,e.data.map(f=>f.productType).sort((a,b)=> (a.localeCompare(b)))])));
   return (
     <div className={'d-flex'} style={{ flexDirection: 'column', height: '100%' }}>
       <div className={'user-details-container flex-grow-1'}>
@@ -42,7 +54,7 @@ export const PreviousReports: React.FC = () => {
           Reporting is required in cubic metres.
         </AuroraNavBar>
         <Container fluid={true} className={'my-3 media-padding'}>
-          {previousReports.length === 0 && <div className={'mt-4'}>You have no submitted reports!</div>}
+          {previousReports.length === 0 && <div className={'mt-4'}>You have no submitted reports at all!</div>}
           {previousReports.length > 0 &&
             previousReports
               .map((e) => e.permitId)
@@ -78,10 +90,8 @@ export const PreviousReports: React.FC = () => {
                           </tr>
                           <tr>
                             <th>Month</th>
-                            {previousReports
-                              .filter((f) => e === f.permitId)[0]
-                              .data.map((f, i) => (
-                                <th key={`pr_th_${i}`}>{f.productType}</th>
+                            {(productTypeMap.get(e) || []).map((f, i) => (
+                                <th key={`pr_th_${i}`}>{f}</th>
                               ))}
                             <th>Reported date</th>
                             <th style={{ textAlign: 'right' }}>Stumpage charged</th>
@@ -95,12 +105,12 @@ export const PreviousReports: React.FC = () => {
                                 <tr key={`rr-tr-${index}`}>
                                   <td>{res.month}</td>
 
-                                  {res.data.map((g, i) => (
+                                  {(productTypeMap.get(e) || []).map((prodType, i) => (
                                     <td key={`rr-tr-${index}-td-${i}`}>
                                       <InputGroup>
                                         <Input
                                           style={{ textAlign: 'right' }}
-                                          value={g.quantity || ''}
+                                          value={res.data.find(d=>d.productType === prodType)?.quantity ||''}
                                           type={'text'}
                                           readOnly={true}
                                         />
