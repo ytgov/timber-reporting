@@ -24,6 +24,7 @@ spec:
     - kind: Rule
       #match requests to this domain
       match: Host(`report-timber-harvest.service.yukon.ca`)
+      priority: 10
       services:
         - name: timber-client-svc
           port: 80
@@ -39,14 +40,16 @@ spec:
 
     - kind: Rule
       #match requests to this domain
-      match: PathPrefix(`/api/`)
+      match: Host(`report-timber-harvest.service.yukon.ca`) && PathPrefix(`/api/`)
+      priority: 11
       services:
         - name: timber-api-svc
           port: 3000
           weight: 10
     - kind: Rule
       #match requests to this domain
-      match: PathPrefix(`/ivr/`)
+      match: Host(`report-timber-harvest.service.yukon.ca`) && PathPrefix(`/ivr/`)
+      priority: 11
       services:
         - name: timber-api-svc
           port: 3000
