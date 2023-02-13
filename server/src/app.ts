@@ -38,12 +38,12 @@ const buildToken = async (req: Request, res: Response) => {
   let clientNum = 0;
   try {
     if (res.locals.user) {
-      clientNum = await validateClientORCL(res.locals.user.name);
+      clientNum = await validateClientORCL(res.locals.user.email);
     }
     if (clientNum > 0) {
       const token = jwt.sign(
         {
-          username: req.oidc.user.name,
+          username: req.oidc.user.email,
           role: 'client',
           clientNum: clientNum,
         },
@@ -79,8 +79,7 @@ const getClientFromJWT = async (req: Request) => {
 };
 
 const app = express();
-
-app.use(session({secret: sessionTokenSecret ? sessionTokenSecret: 'todo-secret'}));
+app.use(session({ secret: sessionTokenSecret }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
