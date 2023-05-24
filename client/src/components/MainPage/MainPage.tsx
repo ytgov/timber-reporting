@@ -33,6 +33,7 @@ export interface IData {
   permitProductId: string;
   permitScheduleId: string;
   remainingVolume: number;
+  status: string;
 }
 
 export interface IRequiredReport {
@@ -251,7 +252,7 @@ export const MainPage: React.FC = () => {
                                                   type={'number'}
                                                   step={'.01'}
                                                   readOnly={res.processed}
-                                                  invalid={permitDisplayError === e && !g.quantity}
+                                                  invalid={permitDisplayError === e && !g.quantity  && g.status === 'OVERDUE'}
                                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                     const value = e.target.value;
                                                     setRequiredReports((a: IRequiredReport[]) => {
@@ -310,7 +311,7 @@ export const MainPage: React.FC = () => {
                                               value={g.quantity}
                                               type={'text'}
                                               readOnly={res.processed}
-                                              invalid={permitDisplayError === e && !g.quantity}
+                                              invalid={permitDisplayError === e && !g.quantity  && g.status === 'OVERDUE'}
                                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 var valueChar = e.target.value;
                                                 var value = 0;
@@ -446,9 +447,10 @@ export const MainPage: React.FC = () => {
                                     const data = requiredReports
                                       .filter((rr) => rr.permitId === e)
                                       .reduce((prev: IData[], curr: IRequiredReport) => [...prev, ...curr.data], []);
-                                    if (data.find((d) => !d.quantity && d.quantity !== 0)) {
+                                    if (data.find((d) =>  (!d.quantity && d.quantity !== 0 && d.status === 'OVERDUE'))) {
+
                                       setPermitDisplayError(e);
-                                      setErrorMessage('Missing harvest amount. You must enter a value for every month');
+                                      setErrorMessage('Missing harvest amount. You must enter a value for every past due month as shown in RED');
                                       setAttemptSubmit(e);
                                     } else {
                                       const x = await submitTimberHarvest(data);

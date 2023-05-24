@@ -111,6 +111,7 @@ export const selectRequiredReportsORCL = async (clientNum: number) => {
           permitProductId: f.TEN_PERMIT_PRODUCT_ID,
           permitScheduleId: f.TEN_PERMIT_SCHEDULE_ID,
           remainingVolume: f.REMAINING_VOLUME,
+          status: f.STATE,
         };
       });
 
@@ -277,7 +278,7 @@ export const insertPermitReportMonthDataORCL = async (data: any, clientNum: numb
     });
     let sql =
       'MERGE into FMB.TEN_PERMIT_SCHED_PROD_STAGE t1 ' +
-      'using (SELECT :1 a,:2 b, :3 c , :4 d, :5 e, :6 f from dual) t2 ' +
+      'using (select * from (SELECT :1 a,:2 b, :3 c , :4 d, :5 e, :6 f from dual) t3 where t3.b is not null) t2 ' +
       'on (t1.TEN_PERMIT_SCHED_PROD_ID = t2.a) ' +
       'when matched then ' +
       '  UPDATE set t1.VOLUME = t2.b, t1.TEN_PERMIT_PRODUCT_ID = t2.c, t1.TEN_PERMIT_SCHEDULE_ID = t2.d, t1.REC_LAST_MOD_DATE=sysdate, ' +
@@ -288,7 +289,7 @@ export const insertPermitReportMonthDataORCL = async (data: any, clientNum: numb
 
     let binds = [
       data.permitReportId,
-      data.quantity.toString(),
+      !data.quantity?null:data.quantity.toString(),
       data.permitProductId,
       data.permitScheduleId,
       clientNum,
