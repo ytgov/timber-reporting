@@ -226,6 +226,7 @@ export const MainPage: React.FC = () => {
                                         {f.productType}
                                       </th>
                                   )).sort()}
+                              <th style={{ textAlign: 'right', borderBottomWidth: 1 }}>Number of Cords</th>
                               <th style={{ textAlign: 'right', borderBottomWidth: 1 }}>Stumpage due</th>
                             </tr>
                           )}
@@ -286,6 +287,13 @@ export const MainPage: React.FC = () => {
                                               </InputGroup>
                                             </FormGroup>
                                           ))}
+                                        </div>
+                                        <div className={'mt-2'}>
+                                          Cords:{' '}
+                                          {res.data.reduce(
+                                              (prev: number, curr: IData) => prev + curr.quantity / 2.265,
+                                              0
+                                          ).toFixed(2)}
                                         </div>
                                         <div className={'mt-2'}>
                                           Stumpage due:{' '}
@@ -356,6 +364,12 @@ export const MainPage: React.FC = () => {
                                           </InputGroup>
                                         </td>
                                       ))}
+                                      <td align={'right'}>
+                                        {res.data.reduce(
+                                            (prev: number, curr: IData) => prev + curr.quantity / 2.265,
+                                            0
+                                        ).toFixed(2)}
+                                      </td>
                                       <td align={'right'}>
                                         {formatCurrency(
                                           res.data.reduce(
@@ -476,6 +490,20 @@ export const MainPage: React.FC = () => {
                                   Submit report
                                 </Button>
                               )}
+                            </td>
+                            <td align={'right'}>
+                              Total Cords:{' '}
+                              {requiredReports
+                                      .filter((rr) => rr.permitId === e)
+                                      .reduce(
+                                          (prev: number, curr: IRequiredReport) =>
+                                              prev +
+                                              curr.data.reduce(
+                                                  (prev2: number, curr2: IData) => prev2 + curr2.quantity / 2.265,
+                                                  0
+                                              ),
+                                          0
+                              ).toFixed(2)}
                             </td>
                             <td align={'right'}>
                               Total:{' '}
