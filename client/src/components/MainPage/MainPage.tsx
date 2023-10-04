@@ -142,7 +142,7 @@ export const MainPage: React.FC = () => {
 
   useEffect(() => {
     refresh();
-  }, [reportingUnit]);
+  }, [reportingUnit, refresh]);
 
   const cordConversionFactor = 2.265;
   
