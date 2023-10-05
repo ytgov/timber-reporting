@@ -12,8 +12,12 @@
   "devDependencies": {
     "chalk": "^5.0.1",
     "cspell": "^5.21.2",
+    "eslint": "^8.50.0",
     "glob": "^7.2.3",
     "markdown-link-check": "^3.10.2",
     "markdownlint-cli": "^0.34.0"
+  },
+  "dependencies": {
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }
