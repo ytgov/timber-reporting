@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Button,
@@ -101,7 +101,8 @@ export const MainPage: React.FC = () => {
 
   const [reportingUnit, setReportingUnit] = useState('CubicMetres');
 
-  const refresh = () => {
+ // const refresh = () => {
+  const refresh = useCallback(async () => {
     setErrorMessage('');
     setAttemptSubmit('');
     setPermitDisplayError('');
@@ -125,7 +126,7 @@ export const MainPage: React.FC = () => {
               }
             }
             if (reportingUnit === 'Cords') { break;}
-          };
+          }
         } else {
           setErrorMessage('Not Logged in');
         }
@@ -138,11 +139,12 @@ export const MainPage: React.FC = () => {
         }
         setLoading(false);
       });
-  };
+ // };
+  }, [reportingUnit]);
 
   useEffect(() => {
     refresh();
-  }, [refresh]);
+   }, [refresh]);
 
   const cordConversionFactor = 2.265;
   
@@ -207,26 +209,26 @@ export const MainPage: React.FC = () => {
                     <Row>
                       <Col>
                         <input
-                          type="radio"
-                          name="reportingUnit"
-                          value="CubicMetres"
-                          id="cubicMetres"
+                          type={"radio"}
+                          name={"reportingUnit"}
+                          value={"CubicMetres"}
+                          id={"cubicMetres"}
                           checked={reportingUnit === "CubicMetres"}
                           onChange={onOptionChange}
                         />
                         {' '}
-                        <label htmlFor="cubicMetres">Cubic Metres (m&#x00B3;)</label>
+                        <label htmlFor={"cubicMetres"}>Cubic Metres (m&#x00B3;)</label>
                         {'      '}
                         <input
-                          type="radio"
-                          name="reportingUnit"
-                          value="Cords"
-                          id="cords"
+                          type={"radio"}
+                          name={"reportingUnit"}
+                          value={"Cords"}
+                          id={"cords"}
                           checked={reportingUnit === "Cords"}
                           onChange={onOptionChange}
                         />
                         {' '}
-                        <label htmlFor="cords">Cords</label>
+                        <label htmlFor={"cords"}>Cords</label>
                       </Col>
                      </Row>
                     </CardBody>
