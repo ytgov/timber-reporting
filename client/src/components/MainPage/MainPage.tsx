@@ -206,7 +206,7 @@ export const MainPage: React.FC = () => {
           {requiredReports.length > 0 && (
               <div>
                 <Card>
-                  <CardHeader tag={'h4'}>Select the Reporting Unit (One Cord equals 2.265 m&#x00B3;) </CardHeader>
+                  <CardHeader>Select the Reporting Unit (One Cord equals 2.265 m&#x00B3;) </CardHeader>
                   <CardBody>
                     <Row>
                       <Col>
