@@ -164,6 +164,7 @@ export const MainPage: React.FC = () => {
         <Container fluid={true} className={'my-3 media-padding'}>
           {loading && <div className={'mt-4'}>Loading...</div>}
           {requiredReports.length === 0 && !loading && <div className={'mt-4'}>You have no required reports!</div>}
+{/*
           {requiredReports.length > 0 && (
             <Card>
               <CardHeader>Enter the number of cords in the field below to find the m&#x00B3; conversion.</CardHeader>
@@ -200,11 +201,12 @@ export const MainPage: React.FC = () => {
               </CardBody>
             </Card>
           )}
+*/}
 
           {requiredReports.length > 0 && (
               <div>
                 <Card>
-                  <CardHeader>Select the Reporting Unit.</CardHeader>
+                  <CardHeader tag={'h4'}>Select the Reporting Unit (One Cord equals 2.265 m&#x00B3;) </CardHeader>
                   <CardBody>
                     <Row>
                       <Col>
