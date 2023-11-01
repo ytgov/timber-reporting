@@ -166,43 +166,6 @@ export const MainPage: React.FC = () => {
           {requiredReports.length === 0 && !loading && <div className={'mt-4'}>You have no required reports!</div>}
 
           {requiredReports.length > 0 && (
-            <Card>
-              <CardHeader>Enter the number of cords in the field below to find the m&#x00B3; conversion.</CardHeader>
-              <CardBody>
-                <Row>
-                  <Col>
-                    <FormGroup>
-                      <Label>Cord</Label>
-                      <Input
-                        value={cordValue}
-                        type={'number'}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          const value: any = e.target.value;
-                          setCordValue(value);
-                        }}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col>
-                    <FormGroup>
-                      <Label>Cubic Metres (m&#x00B3;)</Label>
-                      <Input
-                        value={!cordValue || isNaN(cordValue) ? '' : cordValue * cordConversionFactor}
-                        type={'number'}
-                        readOnly={true}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          const value: any = e.target.value;
-                          setCordValue(!value || isNaN(value) ? undefined : Number(value) / cordConversionFactor);
-                        }}
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-          )}
-
-          {requiredReports.length > 0 && (
               <div>
                 <Card>
                   <CardHeader tag={'h3'}>Select the Reporting Unit (One Cord equals 2.265 m&#x00B3;) </CardHeader>
