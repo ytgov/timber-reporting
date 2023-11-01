@@ -51,7 +51,7 @@ export interface IRequiredReport {
 }
 
 export const MainPage: React.FC = () => {
-  const [cordValue, setCordValue] = useState<number | undefined>(1);
+ // const [cordValue, setCordValue] = useState<number | undefined>(1);
   const { xs, sm } = useWindowDimensions();
   const mobile = xs || sm;
   const [requiredReports, setRequiredReports] = useState([] as IRequiredReport[]);
@@ -164,7 +164,44 @@ export const MainPage: React.FC = () => {
         <Container fluid={true} className={'my-3 media-padding'}>
           {loading && <div className={'mt-4'}>Loading...</div>}
           {requiredReports.length === 0 && !loading && <div className={'mt-4'}>You have no required reports!</div>}
-
+          {/*
+          {requiredReports.length > 0 && (
+            <Card>
+              <CardHeader>Enter the number of cords in the field below to find the m&#x00B3; conversion.</CardHeader>
+              <CardBody>
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      <Label>Cord</Label>
+                      <Input
+                        value={cordValue}
+                        type={'number'}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const value: any = e.target.value;
+                          setCordValue(value);
+                        }}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label>Cubic Metres (m&#x00B3;)</Label>
+                      <Input
+                        value={!cordValue || isNaN(cordValue) ? '' : cordValue * cordConversionFactor}
+                        type={'number'}
+                        readOnly={true}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const value: any = e.target.value;
+                          setCordValue(!value || isNaN(value) ? undefined : Number(value) / cordConversionFactor);
+                        }}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          )}
+*/}
           {requiredReports.length > 0 && (
               <div>
                 <Card>
