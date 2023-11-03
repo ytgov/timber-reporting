@@ -117,6 +117,8 @@ const config = {
     postLogoutRedirect: '/api/auth/post-logout',
   },
 };
+//todo remove after tests
+console.log(config);
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
