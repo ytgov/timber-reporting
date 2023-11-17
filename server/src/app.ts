@@ -118,7 +118,7 @@ const config = {
   },
 };
 //todo remove after tests
-console.log(config);
+//console.log(config);
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
