@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Button,
@@ -33,6 +33,8 @@ export interface IData {
   permitProductId: string;
   permitScheduleId: string;
   remainingVolume: number;
+  status: string;
+  units: string;
 }
 
 export interface IRequiredReport {
@@ -49,7 +51,7 @@ export interface IRequiredReport {
 }
 
 export const MainPage: React.FC = () => {
-  const [cordValue, setCordValue] = useState<number | undefined>(1);
+ // const [cordValue, setCordValue] = useState<number | undefined>(1);
   const { xs, sm } = useWindowDimensions();
   const mobile = xs || sm;
   const [requiredReports, setRequiredReports] = useState([] as IRequiredReport[]);
@@ -97,7 +99,10 @@ export const MainPage: React.FC = () => {
     return tot > remain[0];
   };
 
-  const refresh = () => {
+  const [reportingUnit, setReportingUnit] = useState('CubicMetres');
+
+ // const refresh = () => {
+  const refresh = useCallback(async () => {
     setErrorMessage('');
     setAttemptSubmit('');
     setPermitDisplayError('');
@@ -112,6 +117,16 @@ export const MainPage: React.FC = () => {
             processed: e.data.find((f) => !!f.quantity || f.quantity === 0),
           }));
           setRequiredReports(data);
+          for (const element of data) {
+            for (const inner of element.data) {
+       //       console.log(inner);
+              if (inner.units === 'Cords') {
+                setReportingUnit('Cords');
+                break;
+              }
+            }
+            if (reportingUnit === 'Cords') { break;}
+          }
         } else {
           setErrorMessage('Not Logged in');
         }
@@ -124,12 +139,18 @@ export const MainPage: React.FC = () => {
         }
         setLoading(false);
       });
-  };
+ // };
+  }, [reportingUnit]);
 
   useEffect(() => {
     refresh();
-  }, []);
+   }, [refresh]);
 
+  const cordConversionFactor = 2.265;
+  
+  const onOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReportingUnit(e.target.value)
+  }
   return (
     <div className={'d-flex'} style={{ flexDirection: 'column', height: '100%' }}>
       <div className={'user-details-container flex-grow-1'}>
@@ -138,11 +159,12 @@ export const MainPage: React.FC = () => {
           <br />
           You can report on any outstanding harvest volumes
           <br />
-          Reporting is required in cubic metres.
+          You can report harvest in cubic metres OR in cords.
         </AuroraNavBar>
         <Container fluid={true} className={'my-3 media-padding'}>
           {loading && <div className={'mt-4'}>Loading...</div>}
           {requiredReports.length === 0 && !loading && <div className={'mt-4'}>You have no required reports!</div>}
+          {/*
           {requiredReports.length > 0 && (
             <Card>
               <CardHeader>Enter the number of cords in the field below to find the m&#x00B3; conversion.</CardHeader>
@@ -163,14 +185,14 @@ export const MainPage: React.FC = () => {
                   </Col>
                   <Col>
                     <FormGroup>
-                      <Label>Cubic metres (m&#x00B3;)</Label>
+                      <Label>Cubic Metres (m&#x00B3;)</Label>
                       <Input
-                        value={!cordValue || isNaN(cordValue) ? '' : cordValue * 2.265}
+                        value={!cordValue || isNaN(cordValue) ? '' : cordValue * cordConversionFactor}
                         type={'number'}
                         readOnly={true}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           const value: any = e.target.value;
-                          setCordValue(!value || isNaN(value) ? undefined : Number(value) / 2.265);
+                          setCordValue(!value || isNaN(value) ? undefined : Number(value) / cordConversionFactor);
                         }}
                       />
                     </FormGroup>
@@ -179,6 +201,42 @@ export const MainPage: React.FC = () => {
               </CardBody>
             </Card>
           )}
+*/}
+          {requiredReports.length > 0 && (
+              <div>
+                <Card>
+                  <CardHeader tag={'h3'}>Select the Reporting Unit (One Cord equals 2.265 m&#x00B3;) </CardHeader>
+                  <CardBody>
+                    <Row>
+                      <Col>
+                        <input
+                          type={"radio"}
+                          name={"reportingUnit"}
+                          value={"CubicMetres"}
+                          id={"cubicMetres"}
+                          checked={reportingUnit === "CubicMetres"}
+                          onChange={onOptionChange}
+                        />
+                        {' '}
+                        <label htmlFor={"cubicMetres"}>Cubic Metres (m&#x00B3;)</label>
+                        {'      '}
+                        <input
+                          type={"radio"}
+                          name={"reportingUnit"}
+                          value={"Cords"}
+                          id={"cords"}
+                          checked={reportingUnit === "Cords"}
+                          onChange={onOptionChange}
+                        />
+                        {' '}
+                        <label htmlFor={"cords"}>Cords</label>
+                      </Col>
+                     </Row>
+                    </CardBody>
+                  </Card>
+              </div>
+          )}
+
           {requiredReports.length > 0 &&
             requiredReports
               .map((e) => e.permitId)
@@ -225,6 +283,10 @@ export const MainPage: React.FC = () => {
                                         {f.productType}
                                       </th>
                                   )).sort()}
+                              {reportingUnit === 'CubicMetres' && (
+                                  <th style={{ textAlign: 'right', borderBottomWidth: 1 }}> Number of Cords</th>)}
+                              {reportingUnit !== 'CubicMetres' && (
+                                  <th style={{ textAlign: 'right', borderBottomWidth: 1 }}> Number of m&#x00B3;</th>)}
                               <th style={{ textAlign: 'right', borderBottomWidth: 1 }}>Stumpage due</th>
                             </tr>
                           )}
@@ -247,13 +309,13 @@ export const MainPage: React.FC = () => {
                                               <InputGroup>
                                                 <Input
                                                   style={{ textAlign: 'right' }}
-                                                  value={g.quantity || ''}
+                                                  value={g.quantity || '' }
                                                   type={'number'}
                                                   step={'.01'}
                                                   readOnly={res.processed}
-                                                  invalid={permitDisplayError === e && !g.quantity}
+                                                  invalid={permitDisplayError === e && !g.quantity  && g.status === 'OVERDUE'}
                                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                    const value = e.target.value;
+                                                    const value =  reportingUnit !== 'CubicMetres' ? Number(e.target.value) * cordConversionFactor || '' : e.target.value;
                                                     setRequiredReports((a: IRequiredReport[]) => {
                                                       //pindex is index of g.permitReportId
                                                       const pIndex = a.findIndex((b) =>
@@ -281,20 +343,52 @@ export const MainPage: React.FC = () => {
                                                     });
                                                   }}
                                                 />
-                                                <InputGroupAddon addonType={'append'}>m&#x00B3;</InputGroupAddon>
+                                                {reportingUnit === 'CubicMetres' && (<InputGroupAddon addonType={'append'}>m&#x00B3;</InputGroupAddon>)}
+                                                {reportingUnit === 'Cords' && (<InputGroupAddon addonType={'append'}>cords</InputGroupAddon>)}
                                               </InputGroup>
                                             </FormGroup>
                                           ))}
                                         </div>
-                                        <div className={'mt-2'}>
-                                          Stumpage due:{' '}
-                                          {formatCurrency(
-                                            res.data.reduce(
-                                              (prev: number, curr: IData) => prev + curr.quantity * Number(curr.rate),
-                                              0
-                                            )
+                                        {reportingUnit === 'CubicMetres' && (
+                                            <>
+                                              <div className={'mt-2'}>
+                                                Cords:{' '}
+                                                {res.data.reduce(
+                                                    (prev: number, curr: IData) => prev + curr.quantity / cordConversionFactor,
+                                                    0
+                                                ).toFixed(3)}
+                                              </div>
+                                              <div className={'mt-2'}>
+                                                Stumpage due:{' '}
+                                                {formatCurrency(
+                                                    res.data.reduce(
+                                                        (prev: number, curr: IData) => prev + curr.quantity * Number(curr.rate),
+                                                        0
+                                                    )
+                                                )}
+                                              </div>
+                                            </>
                                           )}
-                                        </div>
+                                        {reportingUnit !== 'CubicMetres' && (
+                                            <>
+                                              <div className={'mt-2'}>
+                                                Cords:{' '}
+                                                {res.data.reduce(
+                                                    (prev: number, curr: IData) => prev + curr.quantity * cordConversionFactor,
+                                                    0
+                                                ).toFixed(3)}
+                                              </div>
+                                              <div className={'mt-2'}>
+                                                Stumpage due:{' '}
+                                                {formatCurrency(
+                                                    res.data.reduce(
+                                                        (prev: number, curr: IData) => prev + (curr.quantity * cordConversionFactor) * Number(curr.rate),
+                                                        0
+                                                    )
+                                                )}
+                                              </div>
+                                            </>
+                                        )}
                                       </td>
                                     </tr>
                                   )}
@@ -307,10 +401,11 @@ export const MainPage: React.FC = () => {
                                           <InputGroup>
                                             <Input
                                               style={{ textAlign: 'right' }}
-                                              value={g.quantity}
+                                      //        value={g.units === 'Cords' ? g.quantity / cordConversionFactor : g.quantity }
+                                              value={ g.quantity }
                                               type={'text'}
                                               readOnly={res.processed}
-                                              invalid={permitDisplayError === e && !g.quantity}
+                                              invalid={permitDisplayError === e && !g.quantity  && g.status === 'OVERDUE'}
                                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 var valueChar = e.target.value;
                                                 var value = 0;
@@ -331,7 +426,7 @@ export const MainPage: React.FC = () => {
                                                     b.data.find((c) => c.permitReportId === g.permitReportId)
                                                   );
                                                   const dataIndex = a[pIndex].data.findIndex(
-                                                    (c) => c.permitReportId === g.permitReportId //prdouct column
+                                                    (c) => c.permitReportId === g.permitReportId //product column
                                                   );
                                                   return [
                                                     ...a.slice(0, pIndex),
@@ -351,18 +446,45 @@ export const MainPage: React.FC = () => {
                                                 });
                                               }}
                                             />
-                                            <InputGroupAddon addonType={'append'}>m&#x00B3;</InputGroupAddon>
+                                            {reportingUnit === 'CubicMetres' && (<InputGroupAddon addonType={'append'}>m&#x00B3;</InputGroupAddon>)}
+                                            {reportingUnit !== 'CubicMetres' && (<InputGroupAddon addonType={'append'}>cords</InputGroupAddon>)}
                                           </InputGroup>
                                         </td>
                                       ))}
-                                      <td align={'right'}>
-                                        {formatCurrency(
-                                          res.data.reduce(
-                                            (prev: number, curr: IData) => prev + curr.quantity * Number(curr.rate),
-                                            0
-                                          )
-                                        )}
-                                      </td>
+                                      {reportingUnit === 'CubicMetres' && (
+                                          <>
+                                            <td align={'right'}>
+                                              {res.data.reduce(
+                                                  (prev: number, curr: IData) => prev + curr.quantity / cordConversionFactor,
+                                                  0
+                                              ).toFixed(3)}
+                                            </td>
+                                            <td align={'right'}>
+                                              {formatCurrency(
+                                                  res.data.reduce(
+                                                      (prev: number, curr: IData) => prev + curr.quantity * Number(curr.rate),
+                                                      0
+                                                  )
+                                              )}
+                                            </td>
+                                          </>)}
+                                      {reportingUnit !== 'CubicMetres' && (
+                                          <>
+                                            <td align={'right'}>
+                                              {res.data.reduce(
+                                                  (prev: number, curr: IData) => prev + curr.quantity * cordConversionFactor,
+                                                  0
+                                              ).toFixed(3)}
+                                            </td>
+                                            <td align={'right'}>
+                                              {formatCurrency(
+                                                  res.data.reduce(
+                                                      (prev: number, curr: IData) => prev + (curr.quantity * cordConversionFactor) * Number(curr.rate),
+                                                      0
+                                                  )
+                                              )}
+                                            </td>
+                                          </>)}
                                     </tr>
                                   )}
                                 </>
@@ -446,11 +568,17 @@ export const MainPage: React.FC = () => {
                                     const data = requiredReports
                                       .filter((rr) => rr.permitId === e)
                                       .reduce((prev: IData[], curr: IRequiredReport) => [...prev, ...curr.data], []);
-                                    if (data.find((d) => !d.quantity && d.quantity !== 0)) {
+                                    if (data.find((d) =>  (!d.quantity && d.quantity !== 0 && d.status === 'OVERDUE'))) {
+
                                       setPermitDisplayError(e);
-                                      setErrorMessage('Missing harvest amount. You must enter a value for every month');
+                                      setErrorMessage('Missing harvest amount. You must enter a value for every past due month as shown in RED');
                                       setAttemptSubmit(e);
                                     } else {
+                                      data.forEach((element, index) => { // entered in cords so convert to cubic metres for Forestar
+                                      //      data[index].quantity = element.quantity * cordConversionFactor;
+                                         data[index].units = reportingUnit;
+                                      });
+                                    //  setReportingUnit('CubicMetres');
                                       const x = await submitTimberHarvest(data);
                                       if (x === 1) {
                                         setSubmittedPermit(e);
@@ -475,22 +603,70 @@ export const MainPage: React.FC = () => {
                                 </Button>
                               )}
                             </td>
-                            <td align={'right'}>
-                              Total:{' '}
-                              {formatCurrency(
-                                requiredReports
-                                  .filter((rr) => rr.permitId === e)
-                                  .reduce(
-                                    (prev: number, curr: IRequiredReport) =>
-                                      prev +
-                                      curr.data.reduce(
-                                        (prev2: number, curr2: IData) => prev2 + curr2.quantity * Number(curr2.rate),
-                                        0
-                                      ),
-                                    0
-                                  )
-                              )}
-                            </td>
+                            {reportingUnit === 'CubicMetres' && (
+                                <>
+                                  <td align={'right'}>
+                                    Total Cords:{' '}
+                                    {requiredReports
+                                        .filter((rr) => rr.permitId === e)
+                                        .reduce(
+                                            (prev: number, curr: IRequiredReport) => prev +
+                                                curr.data.reduce(
+                                                    (prev2: number, curr2: IData) => prev2 + curr2.quantity / cordConversionFactor,
+                                                    0
+                                                ),
+                                            0
+                                        ).toFixed(2)}
+                                  </td>
+                                  <td align={'right'}>
+                                    Total:{' '}
+                                    {formatCurrency(
+                                        requiredReports
+                                            .filter((rr) => rr.permitId === e)
+                                            .reduce(
+                                                (prev: number, curr: IRequiredReport) => prev +
+                                                    curr.data.reduce(
+                                                        (prev2: number, curr2: IData) => prev2 + curr2.quantity * Number(curr2.rate),
+                                                        0
+                                                    ),
+                                                0
+                                            )
+                                    )}
+                                  </td>
+                                </>
+                            )}
+                            {reportingUnit !== 'CubicMetres' && (
+                                <>
+                                  <td align={'right'}>
+                                    Total m&#x00B3;:{' '}
+                                    {requiredReports
+                                        .filter((rr) => rr.permitId === e)
+                                        .reduce(
+                                            (prev: number, curr: IRequiredReport) => prev +
+                                                curr.data.reduce(
+                                                    (prev2: number, curr2: IData) => prev2 + curr2.quantity * cordConversionFactor,
+                                                    0
+                                                ),
+                                            0
+                                        ).toFixed(2)}
+                                  </td>
+                                  <td align={'right'}>
+                                    Total:{' '}
+                                    {formatCurrency(
+                                        requiredReports
+                                            .filter((rr) => rr.permitId === e)
+                                            .reduce(
+                                                (prev: number, curr: IRequiredReport) => prev +
+                                                    curr.data.reduce(
+                                                        (prev2: number, curr2: IData) => prev2 + (curr2.quantity *cordConversionFactor) * Number(curr2.rate),
+                                                        0
+                                                    ),
+                                                0
+                                            )
+                                    )}
+                                  </td>
+                                </>
+                            )}
                           </tr>
                         </tfoot>
                       </Table>
